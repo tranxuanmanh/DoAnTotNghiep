@@ -50,6 +50,7 @@ import AddTinTuc from "./Admin/Component/TinTuc/AddTinTuc";
 import XemChiTietTinTuc from "./Admin/Component/TinTuc/XemChiTietTinTuc";
 import CapNhatTinTuc from "./Admin/Component/TinTuc/CapNhatTinTuc";
 import NhanVienIndex from "./Admin/Component/NhanVien/NhanVienIndex";
+import IndexDanhGia from "./Admin/Component/DanhGia/indexDanhGia";
 
 
 function App() {
@@ -170,6 +171,8 @@ function App() {
       <Route path="nhanvien-manager" element={<NhanVienIndex/>}/>
       {/* <Route path="nhanvien-manager/add-nhanvien" element={<NhanVienIndex/>}/> */}
 
+      {/* Quản lý đánh giá */}
+      <Route path="review-manager" element={<IndexDanhGia/>}/>
 
       </Route>
   </Route>

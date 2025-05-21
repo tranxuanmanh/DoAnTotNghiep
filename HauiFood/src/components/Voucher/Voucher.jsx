@@ -60,7 +60,7 @@ const Voucher = () => {
       };
     console.log(voucherCode)
   return (
-    <>
+    <div className="h-[600px]">
     <div className='w-[100%] text-center mt-3 font-semibold '>Danh sách mã khuyến mãi</div>
     <div className="mx-5 my-3 relative w-[25%] ">
   <input
@@ -88,7 +88,7 @@ const Voucher = () => {
 
      
     </div>
-    </>
+    </div>
   
   )
 }

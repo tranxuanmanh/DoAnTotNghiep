@@ -1,18 +1,22 @@
 
 
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const Modal = ({ isActive, setIsActive,show ,cartIndex}) => {
-  console.log({show})
+  console.log({show,cartIndex})
   const [isToppingOpen, setIsToppingOpen] = useState(false);
 
   const [cart, setCart] = useState([]); // Mảng giỏ hàng
-  useEffect(() => {
+
+  const getCart=()=>{
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       setCart(JSON.parse(storedCart));
     }
+  }
+  useEffect(() => {
+    getCart()
   }, []);
   const [selectedToppings, setSelectedToppings] = useState([]);
  
@@ -26,72 +30,110 @@ const Modal = ({ isActive, setIsActive,show ,cartIndex}) => {
   };
  
 
-  const addToCart = (productId, quantity, selectedToppings, e) => {
-    if (e) e.preventDefault();
-    const sortedToppings = [...selectedToppings].sort((a, b) => a - b);
+  // const addToCart = (productId, quantity, selectedToppings, e) => {
+  //   if (e) e.preventDefault();
+  //   const sortedToppings = [...selectedToppings].sort((a, b) => a - b);
   
-    if (cartIndex !== null && cartIndex !== undefined) {
-      // 👉 Trường hợp cập nhật item cũ
-      const updatedCart = [...cart];
-      updatedCart[cartIndex] = {
-        ...updatedCart[cartIndex],
-        quantity,
-        toppings: sortedToppings,
-      };
-      setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //   if (cartIndex !== null && cartIndex !== undefined) {
+  //     // 👉 Trường hợp cập nhật item cũ
+  //     const updatedCart = [...cart];
+  //     updatedCart[cartIndex] = {
+  //       ...updatedCart[cartIndex],
+  //       quantity,
+  //       toppings: sortedToppings,
+  //     };
+  //     setCart(updatedCart);
+  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
      
      
-      setIsActive(false);
-    } else {
-      // 👉 Thêm mới item
-      const existingItemIndex = cart.findIndex(
-        (item) =>
-          item.productId === productId &&
-          JSON.stringify(item.toppings) === JSON.stringify(sortedToppings)
-      );
+  //     setIsActive(false);
+  //   } else {
+  //     // 👉 Thêm mới item
+  //     const existingItemIndex = cart.findIndex(
+  //       (item) =>
+  //         item.productId === productId &&
+  //         JSON.stringify(item.toppings) === JSON.stringify(sortedToppings)
+  //     );
   
-      let updatedCart;
-      if (existingItemIndex !== -1) {
-        updatedCart = [...cart];
-        updatedCart[existingItemIndex].quantity += quantity;
+  //     let updatedCart;
+  //     if (existingItemIndex !== -1) {
+  //       updatedCart = [...cart];
+  //       updatedCart[existingItemIndex].quantity += quantity;
        
-        toast.success("Sản phẩm đã được thêm vào giỏ hàng!",{autoClose:2000});
+  //       toast.success("Sản phẩm đã được thêm vào giỏ hàng!",{autoClose:1000});
         
-      } else {
-        const newItem = {
-          productId,
-          quantity,
-          toppings: sortedToppings,
-          product: show,
-        };
-        updatedCart = [...cart, newItem];
-        toast.success("Sản phẩm đã được thêm vào giỏ hàng!", { autoClose: 2000 });
-        //window.location.reload();
-      }
+  //     } else {
+  //       const newItem = {
+  //         productId,
+  //         quantity,
+  //         toppings: sortedToppings,
+  //         product: show,
+  //       };
+  //       updatedCart = [...cart, newItem];
+  //       toast.success("Sản phẩm đã được thêm vào giỏ hàng!", { autoClose: 1000 });
+
+
+  //     setCart(updatedCart);
+  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //     console.log({updatedCart})
+  //       // window.location.reload();
+  //     }
   
-      setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      // setIsActive(false);
-    }
-  };
+  //     // setCart(updatedCart);
+  //     // localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //     // console.log({updatedCart})
+  //     // setIsActive(false);
+  //   }
+  // };
   
+
+  const addToCart = (productId, quantity, selectedToppings) => {
+  
+  const sortedToppings = [...selectedToppings].sort((a, b) => a - b);
+
+  const existingItemIndex = cart.findIndex((item) =>
+      item.productId === productId &&JSON.stringify(item.toppings) === JSON.stringify(sortedToppings)
+  );
+
+  let updatedCart;
+
+  if (existingItemIndex !== -1) {
+    // ✅ Nếu sản phẩm đã tồn tại với cùng toppings
+    updatedCart = [...cart];
+    updatedCart[existingItemIndex].quantity += quantity; // hoặc: = quantity nếu muốn ghi đè
+    toast.success("Sản phẩm đã được cập nhật trong giỏ hàng!", { autoClose: 1000 });
+  } else {
+    // ✅ Nếu là sản phẩm mới
+    const newItem = {
+      productId,
+      quantity,
+      toppings: sortedToppings,
+      product: show,
+    };
+    updatedCart = [...cart, newItem];
+    toast.success("Sản phẩm đã được thêm vào giỏ hàng!", { autoClose: 1000 });
+  }
+
+  setCart(updatedCart);
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //setIsActive(false);
+};
+
   
   useEffect(()=>{
     console.log({cart})
   },[cart])
   return (
+   
     <div
-      id="crud-modal"
-      style={{ fontFamily: "sans-serif" }}
-      tabIndex="-1"
-      aria-hidden={!isActive ? "true" : "false"}
-      className={`fixed top-0 left-0 w-full h-auto flex items-center justify-center 
-        bg-gray-100/40 z-[100] 
-        ${isActive ? "opacity-100 visible" : "opacity-0 invisible"}`}
+     
+      style={{ fontFamily: "sans-serif" }} className={`fixed top-0 left-0 w-full h-auto flex items-center justify-center 
+        bg-gray-100/40 z-[100] ${isActive ? "opacity-100 visible" : "opacity-0 invisible"}`}
         onClick={() => setIsActive(false)}
     >
+      <ToastContainer/>
       <div className="relative p-4 w-full max-w-2xl h-[110vh] " onClick={(e) => e.stopPropagation()} >
+        
         <div className="relative bg-white rounded-lg shadow-sm overflow-y-scroll h-[90%]">
           {/* Header */}
           <div className="flex items-center justify-between p-3 md:p-3 border-b rounded-t border-gray-200 bg-red-400">
@@ -99,8 +141,8 @@ const Modal = ({ isActive, setIsActive,show ,cartIndex}) => {
             <button
               type="button"
               className="text-black bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={(e) => {
-                e.stopPropagation(); // Ngăn chặn sự kiện click lan sang div cha
+              onClick={() => {
+                // Ngăn chặn sự kiện click lan sang div cha
                  setIsActive(false);
               }}
             >
@@ -108,7 +150,10 @@ const Modal = ({ isActive, setIsActive,show ,cartIndex}) => {
             </button>
           </div>
 
-          <form className="p-2 md:p-2" onSubmit={(e)=>addToCart(show.product_id, quantity, selectedToppings,e)}>
+          <form className="p-2 md:p-2" onSubmit={(e)=>{
+             e.preventDefault();
+            addToCart(show.product_id, quantity, selectedToppings)}}
+            >
             {/* Ảnh sản phẩm */}
             <div>
               <img
@@ -131,7 +176,7 @@ const Modal = ({ isActive, setIsActive,show ,cartIndex}) => {
               <div class="relative flex items-center max-w-[8rem]">
         
       
-    </div>
+                </div>
                 <p >Số lượng mua</p>
                
                 <input

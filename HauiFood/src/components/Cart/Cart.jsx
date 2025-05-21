@@ -18,6 +18,8 @@ const CartPage = () => {
   const [giamgia,setGiamgia]=useState(null);
   const [id,setId]=useState(null);
 
+  const [reloadCart, setReloadCart] = useState(false);
+
   console.log({voucherId});
   const handleVoucher=(e)=>{
     setVoucherId(e.target.value);
@@ -45,12 +47,20 @@ const activeGiamGia = (totalAmount) => {
 console.log(giamgia);
 
 
-  useEffect(() => {
+//Xây dựng hàm lấy dữ liệu trong localStorage
+
+const getDuLieu=()=>{
     const giatri = JSON.parse(localStorage.getItem("cart"));
-    if (giatri) {
-      setCartItem(giatri);
-    }
-  }, []); 
+      if (giatri) {
+        setCartItem(giatri);
+        console.log({giatri})
+      }
+}
+
+
+  useEffect(() => {
+    getDuLieu();
+  }, [reloadCart]); 
   
 //    console.log(cartItem)
 
@@ -62,21 +72,27 @@ const handleQuantityChange = (index, newQuantity) => {
   updatedCart[index].quantity = parseInt(newQuantity, 10) || 0; // đảm bảo là số và tối thiểu 1
   setCartItem(updatedCart);
   localStorage.setItem("cart", JSON.stringify(updatedCart));
-  setTimeout(()=>{
-    window.location.reload()
-  },4000)
+
+  //Gọi lại hàm lấy dữ liệu
+  getDuLieu();
+  setReloadCart((prev) => !prev); // đổi trạng thái để trigger useEffect
+  // setTimeout(()=>{
+  //   window.location.reload()
+  // },4000)
 };
 //Xóa sản phẩm trong giỏ hàng
 const handleRemove = (indexToRemove) => {
   const Confirm=window.confirm("Bạn có muốn xóa sản phẩm này không??");
   if(Confirm){
     const updatedCart = cartItem.filter((_, index) => index !== indexToRemove);
-     setCartItem(updatedCart);
+    setCartItem(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    getDuLieu();
    
-      window.location.reload();
+      // window.location.reload();
     
-    return;
+    // return;
   }
   
 };
@@ -172,6 +188,7 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
             </div>)
           }
             {cartItem.map((item, index) => {
+              console.log(item);
               const selectedToppings = item.product?.toppings?.filter(tp =>
                 item.toppings?.includes(tp.toppingId)
               ) || [];
@@ -180,11 +197,7 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
             
               const totalPrice = item.quantity * (item.product?.priceSell + toppingTotal);
              
-              
-
-           
-          
-              
+        
               return(
 
               <div
@@ -192,7 +205,10 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
                 className="flex justify-between items-center border p-1 rounded shadow-sm bg-white"
               >
                 <div>
-                  <img className="w-30 h-20 rounded" src={item.product?.images?.[0]?.image_url||"https://ruousg.com/wp-content/uploads/2020/10/30.13-Chai-Ruou-ngoai-Rum.jpg"} alt="" />
+                  <img 
+                  title="Xem chi tiết"
+                  onClick={()=>navigate(`/chi-tiet-san-pham/${item.productId}`)}
+                  className="w-30 h-20 rounded" src={item.product?.images?.[0]?.image_url||"https://ruousg.com/wp-content/uploads/2020/10/30.13-Chai-Ruou-ngoai-Rum.jpg"} alt="" />
                 </div>
                 <div className="w-[30%]">
                   <p style={{fontFamily:"sans-serif",fontWeight:"bold"}}>
@@ -209,16 +225,18 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
                     )
                    }
                    
-                    <p className="text-blue-400 text-sm cursor-pointer" onClick={()=>{
+                    {/* <p className="text-blue-400 text-sm cursor-pointer" onClick={()=>{
                       setEdit(!edit)
                       setProductSelected(item.product);
                       setCartIndex(index)
                     }}>
                       Thay đổi
-                    </p>
+                    </p> */}
                                                    
                   <p>Giá: {item.product?.priceSell?.toLocaleString()} đ</p>
-                 
+                 <p
+                 onClick={()=>navigate(`/chi-tiet-san-pham/${item.productId}`)}
+                 className="hover:cursor-pointer  text-[14px] text-blue-400 underline">Xem chi tiết</p>
                 </div>
                 <div className="w-[10%]  rounded-md">
                   <input type="number" value={item.quantity}   onChange={(e) =>
@@ -255,17 +273,13 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
         {/* Phan 2 */}
         <div className=" ms-2 flex-1/2 p-2">
          
-        <div className=" w-[80%] h-[200px] p-2 mx-auto border-2 border-black rounded my-2">
+        <div className=" w-[80%] h-[140px] p-2 mx-auto border-2 border-black rounded my-2">
         <p className="text-lg font-bold text-center">Nhập mã voucher của bạn</p>
         <input onChange={handleVoucher} type="text" placeholder="Nhập mã giảm giá của bạn ... " className="py-2 rounded mt-2 w-[70%]" />
         <span>
           <button onClick={getVoucher} className="bg-blue-500 text-white p-2 rounded ms-2 cursor-pointer w-26">Áp dụng</button>
         </span>
-       {/* <ul className="flex justify-start gap-x-2 mt-2  ms-2 mb-2 bg-white w-[85%] rounded">
-        <li className="bg-teal-400 px-4 py-2 rounded">Mã 1</li>
-        <li className="bg-teal-400 px-4 py-2 rounded">Mã 2</li>
-        <li className="bg-teal-400 px-4 py-2 rounded">Mã 3</li>
-       </ul> */}
+     
         </div>
          
           <div className="border-2 border-black w-[80%] mx-auto px-5 text-[16px] py-3 rounded">
@@ -291,8 +305,7 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
             <li className="flex justify-between px-2">
               <p className="text-xl font-bold">Tổng tiền</p>
               <p className="font-bold">
-               {/* {totalCart.toLocaleString()}đ */}
-               {/* {tongDonHang.toLocaleString()} đ */}
+               
                {totalAfterDiscount.toLocaleString()}
               </p>
             </li>
@@ -326,9 +339,9 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
 
         </div>
       </div>
-      {edit&&(
+      {/* {edit&&(
         <Modal isActive={edit} setIsActive={setEdit} show={productSelected} cartIndex={cartIndex}  />
-        )}
+        )} */}
     </div>
   );
 };

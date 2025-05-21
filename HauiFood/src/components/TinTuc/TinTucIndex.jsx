@@ -25,7 +25,7 @@ const TinTucIndex = () => {
     </div>
     
    
-    <div className='flex gap-x-2 gap-y-3 flex-wrap w-full p-4 '>
+    <div className='flex gap-x-3 gap-y-3 flex-wrap w-full p-4 '>
         {tintuc.length>0&&(
             tintuc.map((item,index)=> {
                 if(item.status){

@@ -139,7 +139,7 @@ const DanhMucIndex = () => {
             </button>
           </div>
         </div>
-        <div className="ps-7 flex flex-wrap justify-start gap-x-2 bg-gray-50 shadow rounded w-[84%] py-2 gap-y-2">
+        <div className="ps-2 flex flex-wrap justify-start gap-x-2 bg-gray-50 shadow rounded w-[84%] py-2 gap-y-2">
           {products.length > 0 ? (
             products
               .slice(0, visibleCount)

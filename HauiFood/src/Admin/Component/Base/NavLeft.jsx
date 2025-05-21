@@ -16,6 +16,8 @@ const NavLeft = ({isSidebarOpen}) => {
       const [openTopping,setOpenTopping]=useState(false);
       const [openTinTuc,setOpenTinTuc]=useState(false);
 
+      const [openReview,setOpenReview]=useState(false);
+
       const [orders, setOrders] = useState([]);
 
       const {getToken}=useAuth();
@@ -153,7 +155,14 @@ const NavLeft = ({isSidebarOpen}) => {
                 <i className="fa-regular fa-user"></i>
               </span>
               <Link to="nhanvien-manager">Quản lý nhân viên</Link>
-            
+            </li>
+
+              
+            <li onClick={()=>setOpenReview(!openReview)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
+              <span className='mr-2'>
+                <i className="fa-regular fa-user"></i>
+              </span>
+              <Link to="review-manager">Quản lý đánh giá</Link>
             </li>
 
       <li onClick={() => setThongke(!thongke)} className=" cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-100 focus:bg-blue-100  hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">

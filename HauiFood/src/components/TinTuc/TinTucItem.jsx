@@ -5,12 +5,12 @@ import DateFormart from '../../Admin/Component/Base/DateFormart';
 const TinTucItem = ({news}) => {
     const navigate=useNavigate();
   return (
-    <div className='flex gap-x-3 bg-white rounded shadow-lg p-2 w-[500px] '>
+    <div className='flex gap-x-3 bg-white rounded shadow-lg p-2 w-[470px] '>
         <img className='w-36 h-30 rounded' src={`http://localhost:8080${news?.thumbnail}`} alt="hinh anh" />
         <div className='flex flex-col justify-between'>
            <div>
            <p className='font-semibold'>{news?.title}</p>
-           {/* <div className='text-gray-500'>{String(news?.content).substring(0,20)}...</div> */}
+          
            </div>
           <div>
           <p className='text-sm'>Ngày đăng: {<DateFormart value={news.createdAt}/>}</p>

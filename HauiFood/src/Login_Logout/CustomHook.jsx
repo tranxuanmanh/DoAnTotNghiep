@@ -38,6 +38,7 @@ export default function useAuth() {
     localStorage.setItem("isLogin", false);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("cart");
     setIsLoggedIn(false);
   };
 

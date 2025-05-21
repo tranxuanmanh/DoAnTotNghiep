@@ -31,11 +31,8 @@ const ProductItem = ({product,hot,sale}) => {
               </div>
               <div>
                 <button 
-                data-modal-target="crud-modal"
-                 data-modal-toggle="crud-modal"
-              
                 className={` rounded-lg px-2 py-1 mr-2 text-sm border-2 border-blue-400 font-semibold text-blue-500 hover:bg-blue-500 hover:text-white`}
-                 onClick={()=>setIsActive(!isActive)}
+                onClick={()=>setIsActive(true)}
                 >
                    <i className="fa-solid fa-cart-plus mr-1"></i>
                   Thêm vào giỏ

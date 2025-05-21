@@ -1,5 +1,6 @@
 package org.example.doanbe.Service.ServiceImpl;
 
+import org.example.doanbe.DTO.Response.ReviewResponse;
 import org.example.doanbe.DTO.ReviewDTO;
 import org.example.doanbe.Entities.Order_Item;
 import org.example.doanbe.Entities.Product;
@@ -50,17 +51,83 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(req.getRating());
         review.setComment(req.getComment());
         review.setCreatedAt(LocalDateTime.now());
+        review.setStatus(true);
 
         return reviewRepository.save(review);
     }
 
     @Override
-    public List<Reviews> findByProductId(int id) {
+    public List<ReviewResponse> findByProductId(int id) {
         List<Reviews> reviews=reviewRepository.findByProductId(id);
+        if(reviews==null){
+            throw new MyException("Sản phẩm nay chua co danh gia");
+        }
+        // Chuyển đổi danh sách Reviews thành danh sách ReviewResponse
+        List<ReviewResponse> reviewResponses = reviews.stream()
+                .map(review -> {
+                    String userName= userRepository.findById(review.getUserId()).get().getFullName();
+                  return new ReviewResponse(
+                            review.getReviewId(),
+                            review.getProductId(),
+                            review.getUserId(),
+                            userName,
+                            review.getRating(),
+                            review.getComment(),
+                            review.getStatus(),
+                            review.getCreatedAt()
+                    );
+
+                })
+                .toList();
         if(reviews.isEmpty()){
             return null;
         }
-        return reviews;
+        return reviewResponses;
+    }
+
+
+    //Lay tat ca review theo sao
+
+    @Override
+    public List<ReviewResponse> findAllByRating(int start) {
+        List<Reviews> getAllByRating=reviewRepository.findAllByRating(start);
+        if(getAllByRating==null){
+            throw new MyException("Chua co danh gia nao");
+        }
+        // Chuyển đổi danh sách Reviews thành danh sách ReviewResponse
+        List<ReviewResponse> reviewResponse = getAllByRating.stream()
+                .map(review -> {
+                    String userName= userRepository.findById(review.getUserId()).get().getFullName();
+                    return new ReviewResponse(
+                            review.getReviewId(),
+                            review.getProductId(),
+                            review.getUserId(),
+                            userName,
+                            review.getRating(),
+                            review.getComment(),
+                            review.getStatus(),
+                            review.getCreatedAt()
+                    );
+                })
+                .toList();
+        return reviewResponse;
+    }
+
+    @Override
+    public void updateStatus(int id) {
+        Reviews reviews=reviewRepository.findById(id).orElseThrow(()->new MyException("Khong ton tai danh gia nay"));
+        reviews.setStatus(!reviews.getStatus());
+        reviewRepository.save(reviews);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        Reviews reviews=reviewRepository.findById(id).orElseThrow(()->new MyException("Khong ton tai danh gia nay"));
+        if(reviews==null){
+            throw new MyException("Danh gia nay da bi xoa");
+        }
+       reviewRepository.deleteById(id);
+
     }
 }
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Modal from '../Product/ModalProduct/Modal';
 import { useParams } from 'react-router';
 import axios from 'axios';
+import DateFormart from '../../Admin/Component/Base/DateFormart';
 
 
 const ProductDetail = () => {
@@ -11,6 +12,9 @@ const ProductDetail = () => {
      const [products,setProducts]=useState(null);
      const [mainImage, setMainImage]=useState("");
      const [imageActive,setImageActive]=useState([]);
+
+     const [comment,setComment]=useState([]);
+     //Get chi tiết sản phẩm
      const getProductById=async()=>{
         try{
           const res=await axios.get(`http://localhost:8080/api/v1/product/${id}`);
@@ -25,8 +29,19 @@ const ProductDetail = () => {
             console.log(error);
         }
      }
+     //Get tất cả các comment của sản phẩm
+     const getCommentProduct=async()=>{
+      try{
+        const res=await axios.get(`http://localhost:8080/api/v1/review/all/${id}`);
+        setComment(res.data.filter((item)=>item.status==true));
+        console.log(res.data);
+      }catch(error){
+        console.log(error);
+      }
+     }
    useEffect(()=>{
     getProductById();
+    getCommentProduct()
     
    },[id])
   
@@ -34,7 +49,7 @@ const ProductDetail = () => {
     
     console.log(imageActive)
        return (
-    <div className='w-full'>
+    <div className='w-full min-h-[700px]'>
         <p className='text-center bg-green-300 font-semibold py-2'>Chi tiết sản phẩm</p>
       <div className='flex mt-2 ms-5 p-2'>
         <div className='w-[38%] bg-white  py-2 px-2'>
@@ -70,9 +85,27 @@ const ProductDetail = () => {
                   </button>
         </div>
       </div>
-      <div className='ms-4 mt-5 w-[95%] h-70'>
+      <div className='ms-4 mt-5 w-[95%] overflow-scroll min-h-[300px]'>
         <p className='font-semibold border-b py-2 text-blue-500'>Nhận xét 🔽🔽</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio at repellendus iusto provident ratione maxime, nam voluptatum non ab aliquid inventore fugit facere odit cumque consequuntur in explicabo laudantium veritatis.</p>
+        {comment.length>0?(
+          comment.map((item,index)=>
+          <div key={index} className='mt-2 '>
+          <p className='text-sm text-gray-500'>
+           <i class="fa-solid fa-user me-2"></i>   {item.userName} --- Thời gian: {<DateFormart value={item.createdAt}/>}
+          </p>
+          <p className='text-sm'>Bình luận</p>
+          {[...Array(item.start)].map((_, index) => (
+            <i key={index} className="fa-solid fa-star text-yellow-400"></i>
+          ))}
+           ------ {item.comment}
+          </div>
+          
+          )
+          
+        ):(<p>Chưa có đánh giá nào</p>)}
+
+
+
       </div>
       {isActive&&<Modal isActive={isActive} setIsActive={setIsActive} show={products}></Modal>}
     </div>

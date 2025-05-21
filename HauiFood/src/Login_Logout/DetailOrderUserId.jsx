@@ -68,8 +68,12 @@ const DetailOrderUserID = () => {
     const handlePrev = () => {
       if (currentPage > 1) setCurrentPage(prev => prev - 1);
     };
+
+   
   return (
-    <div className="w-[90%] mx-auto  mt-5 relative">
+    <div className="w-[90%] mx-auto  mt-5 relative min-h-[600px]">
+
+    
         {
             user?(
                 <>
@@ -292,7 +296,7 @@ const DetailOrderUserID = () => {
           <td className="px-2 text-center">{total.toLocaleString()} đ</td>
           <td className="px-2 text-center w-36">
             {kq?(<p onClick={()=>navigate(`/review/product/${gt.product.product_id}`,{
-              state:{orderID:gt.id}
+              state:{orderID:gt.id,name: gt.product?.name,img:gt.product?.images?.[0]?.image_url}
             })} className='text-blue-500 underline cursor-pointer'>Đánh giá</p>):(<p></p>)}
           </td>
         </tr>

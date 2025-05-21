@@ -1,13 +1,19 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
+import Change_Pass from "./Change_Pass";
 
 const DetailUser = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const [openChangePass,setOpenChangePass]=useState(false);
 
   return (
-    <div className="w-[90%] mx-auto  mt-5 relative">
+    <div className="w-[90%] mx-auto  mt-5 relative h-[600px]">
+
+      {openChangePass&&<Change_Pass openChangePass={setOpenChangePass}/>}
+
+
       {user ? (
         <>
           <p className="text-center text-xl font-bold mb-3">
@@ -43,10 +49,16 @@ const DetailUser = () => {
                     <td class="px-6 py-4">{user?.phone}</td>
                     <td class="px-6 py-4">{user?.email}</td>
                     <td class="px-6 py-4" >
-                      <Link to="/change-pass">
+                      {/* <Link to="/change-pass">
                       <i title="Đổi mật khẩu" class="fa-classic fa-solid fa-key fa-fw px-3 text-xl  py-2 text-blue-500 cursor-pointer "></i>
                       
-                      </Link>
+                      </Link> */}
+                      <button
+                      onClick={()=>setOpenChangePass(true)}
+                      >
+                      <i title="Đổi mật khẩu" class="fa-classic fa-solid fa-key fa-fw px-3 text-xl  py-2 text-blue-500 cursor-pointer "></i>
+                      
+                      </button>
                      
                     </td>
                   </tr>

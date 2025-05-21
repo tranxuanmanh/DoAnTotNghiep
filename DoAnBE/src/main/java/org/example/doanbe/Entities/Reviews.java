@@ -30,7 +30,6 @@ public class Reviews {
 
     @OneToOne
     @JoinColumn(name = "order_item_id", unique = true, nullable = false)
-
     private Order_Item orderItem;
 
     @Column(name="rating")
@@ -38,6 +37,9 @@ public class Reviews {
 
     @Column(name="comment")
     private String comment;
+
+    @Column(name="status")
+    private Boolean status;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }
