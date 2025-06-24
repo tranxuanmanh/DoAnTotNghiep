@@ -1,0 +1,190 @@
+CREATE TABLE Users (
+                       user_id INT AUTO_INCREMENT PRIMARY KEY,
+                       full_name VARCHAR(50) NOT NULL,
+                       username VARCHAR(50) NOT NULL,
+                       password VARCHAR(255) NOT NULL, -- Nên mã hóa mật khẩu
+                       email VARCHAR(100) NOT NULL,
+                       phone VARCHAR(13) NOT NULL,
+                       status boolean,
+                       verification_token VARCHAR(255) NULL,
+                       is_verified BOOLEAN DEFAULT FALSE,
+                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                       update_at DATETIME,
+                       role_id int,
+                       foreign key (role_id) references Roles(role_id)
+);
+# ALTER TABLE Users ADD COLUMN verification_token VARCHAR(255) NULL;-- Sinh ma token khi user dang ki
+#
+# ALTER TABLE Users ADD COLUMN is_verified BOOLEAN DEFAULT FALSE;-- Xac thuc
+# ALTER TABLE Users add column role_id  int;
+# ALTER TABLE Users add foreign key (role_id) references Roles(role_id);
+CREATE TABLE Roles (
+                       role_id INT AUTO_INCREMENT PRIMARY KEY,
+                       role_name enum('ROLE_ADMIN','ROLE_CLIENT','ROLE_STAFF') default 'ROLE_CLIENT'
+);
+
+
+CREATE TABLE Categories (
+                            category_id INT AUTO_INCREMENT PRIMARY KEY,
+                            name VARCHAR(100) NOT NULL,
+                            description TEXT,
+                            parent_id INT DEFAULT NULL,
+                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            update_at Datetime
+);
+CREATE TABLE Products (
+                          product_id INT AUTO_INCREMENT PRIMARY KEY,
+                          name VARCHAR(100) NOT NULL,
+                          category_id INT,
+                          description TEXT,
+                          price double default 0,-- Giá gốc sản phẩm
+                          quantity int default 0,-- Số lượng
+                          sold_quantity int default 0,-- so luong da ban
+                          tag varchar(50),
+                          status boolean,
+                          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                          update_at Datetime,
+                          FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+);
+alter table Products add column price_discount double default 0;
+alter table Products add column price_sell double;
+alter table Products add column hot boolean default false;
+
+#Bang topping
+CREATE TABLE Toppings (
+                          topping_id INT AUTO_INCREMENT PRIMARY KEY,
+                          name VARCHAR(100) NOT NULL,
+                          price double NOT NULL,
+                          tag_topping varchar(50),
+                          status boolean default true
+
+);
+# product_id int
+#foreign key (product_id) references Products(product_id)
+# alter table Toppings add column status boolean default true;-- Còn topping không(true: Còn,false: Het)
+# alter table Toppings drop column quantity;
+#Product_Topping (N-N)
+create TABLE Product_Topping(
+                                product_id int,
+                                topping_id int,
+                                PRIMARY KEY (product_id, topping_id),
+                                FOREIGN KEY (product_id) references Products(product_id) ON DELETE CASCADE ,
+                                FOREIGN KEY (topping_id) references Toppings(topping_id)
+);
+
+
+#1 Product co nhieu size
+# CREATE TABLE Sizes (
+#                        size_id INT AUTO_INCREMENT PRIMARY KEY,
+#                        product_id INT,
+#                        size VARCHAR(50) NULL,
+#                        price double NULL,
+#                        quantity int default 1,
+#                        is_available BOOLEAN DEFAULT TRUE,
+#                        FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE set null
+# );
+
+# ALTER table Sizes add column quantity int default 0;
+
+
+
+CREATE TABLE Images (
+                        image_id INT AUTO_INCREMENT PRIMARY KEY,
+                        product_id INT,
+                        image_url VARCHAR(255) NOT NULL,
+                        public_id varchar(50) ,
+                        FOREIGN KEY (product_id) REFERENCES Products(product_id) On DELETE CASCADE
+);
+CREATE TABLE Reviews (
+                         review_id INT AUTO_INCREMENT PRIMARY KEY,
+                         product_id INT,
+                         user_id INT,
+                         rating INT CHECK (rating >= 1 AND rating <= 5),
+                         comment TEXT,
+                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
+                         FOREIGN KEY (user_id) REFERENCES Users(user_id) On DELETE CASCADE
+);
+-- Bang luu tru thong tin khuyen mai
+CREATE TABLE Voucher (
+                         voucher_id INT AUTO_INCREMENT PRIMARY KEY,
+                         voucher_code varchar(200),
+                         description TEXT NOT NULL,
+                         min_order double,
+                         discount double,
+                         number_used int default 0,-- So luong da su dung
+                         voucher_status boolean default true,
+                         start_date DATETIME,
+                         end_date DATETIME
+);
+alter table Voucher add column number_used int default 0;
+alter table Voucher add column quantity int default 0;
+alter table Voucher add column voucher_status enum('CHUAKICHHOAT','DANGHOATDONG','HETHAN','HETLUOTSUDUNG');
+# alter table Voucher drop column free_ship;
+-- Moi nguoi chi dung khuyen mai 1 lan
+
+-- Luu thong tin don hang va nguoi dat hang
+CREATE TABLE Orders (
+                        order_id INT AUTO_INCREMENT PRIMARY KEY,
+                        order_code varchar(50) not null,
+                        user_id INT not null,
+                        total_amount double,-- Tổng tất cả các tiền
+                        payment_method ENUM('TIENMAT','CHUYENKHOAN') not null, -- Tiền mặt hoặc Chuyển khoản
+                        payment_status boolean,-- dung : thi la DaThanhToan, sai thi la ChuaThanhToan
+                        order_date DATETIME DEFAULT CURRENT_TIMESTAMP,-- Đặt hàng vào ngày
+                        status ENUM('CHOXULY','CHAPTHUAN','GIAOHANG','GIAOTHANHCONG','HOANTAT','HUY') default 'CHOXULY',-- Trạng thái có thể là 'Chờ xử lý', 'Chấp thuận','Đang giao hàng','Hoàn thành','Hủy' v.v.
+                        note TEXT,
+                        shipping_method ENUM('GIAONGAY', 'GIAOVAOLUC', 'DENLAY') NOT NULL DEFAULT 'GIAONGAY',-- Chọn hình thức van chuyen
+                        full_name VARCHAR(50) NOT NULL, -- Họ tên người nhận
+                        phone_number VARCHAR(13) NOT NULL, -- Số điện thoại
+                        address TEXT NOT NULL, -- Địa chỉ giao hàng
+                        shipping_fee double default 0,-- Phi ship neu co.Dua vao khoang cach dia ly
+                        voucher_id int ,-- Mã giảm giá neu co
+                        update_at datetime default null,-- Cap nhat trang thai don hang
+                        completed_at datetime default null,-- Đơn hàng bị hủy hay hoàn thành lúc nào.Thời gian cuối cùng.
+                        delivery_time DATETIME NULL,-- chỉ dùng với giao vào lúc nào
+                        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+                        FOREIGN KEY (voucher_id) references Voucher(voucher_id)
+
+);
+# //Trang thai thanh toan (0:Chua thanh toan,1:Da thanh toan)
+# alter table Orders add column payment_status boolean;
+ alter table Orders add column order_code varchar(50);
+-- Luu cac san pham trong gio hang
+CREATE TABLE Order_Item (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            order_id INT not null,
+                            product_id INT,
+                            quantity INT  not null ,
+                            price_item double ,-- Bo di
+                            sub_price double NOT NULL,-- Tổng tiền của sản phẩm này (bao gồm product, topping)
+                            FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,-- Khi don hang bi xoa thi cung xoa cac item
+                            FOREIGN KEY (product_id) REFERENCES Products(product_id) on delete set null
+
+);
+ alter table Order_Item add column price_item double  ;
+# alter table Order_Item  drop column priceSell ;
+CREATE TABLE Order_Topping (
+                               order_item_id INT,
+                               topping_id INT,
+                               primary key (order_item_id,topping_id),
+                               FOREIGN KEY (order_item_id) REFERENCES Order_Item(id) ON DELETE CASCADE,
+                               FOREIGN KEY (topping_id) REFERENCES Toppings(topping_id) ON DELETE CASCADE
+);
+
+-- bang nay de luu san pham voi nhung topping nao
+
+CREATE TABLE News (
+                      id INT AUTO_INCREMENT PRIMARY KEY,
+                      user_id int,
+                      title varchar(100),
+                      content TEXT NOT NULL,
+                      thumbnail varchar(255),-- ảnh đại diện , chuyen thanh Img
+                      status boolean,
+                      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                      update_at DATETIME,
+                      foreign key(user_id) references Users(user_id)
+
+);
+Alter table categories add column status boolean;
+//SQL
