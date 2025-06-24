@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import ProductIndex from './Product/ProductIndex';
+import ProductIndex from './ProductIndex';
 import axios from 'axios';
 
 const Product = () => {
   const [productss,setProductss]=useState([]);
+  //Lấy tất cả product
 const getAllProduct=async()=>{
   try{
   const res=await axios.get("http://localhost:8080/api/v1/product/all");
@@ -25,6 +26,7 @@ useEffect(()=>{
   
     {/* <Category></Category> */}
     <ProductIndex products={productss}></ProductIndex>
+    
    </div>
   )
 }

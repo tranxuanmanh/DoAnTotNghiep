@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useScroll } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import DateFormart from '../Base/DateFormart';
 import { useNavigate } from 'react-router';
 import useAuth from '../../../Login_Logout/CustomHook';
@@ -76,27 +76,82 @@ const IndexOrder = () => {
 const updateStatus=async(id,trangthai)=>{
     try{
         const res=await axios.put(`http://localhost:8080/api/v1/order/update/${id}?status=${trangthai}`);
-        toast.success("Xac nhan don hang thanh cong");
+        toast.success("Cập nhật trạng thái đơn hàng thành công",{autoClose:1000});
         getOrders();
         console.log(res.data);
     }catch(error){
-        console.log("Co loi khi lay du lieu")
+        toast.error("Có lỗi khi cập nhật dữ liệu");
+        console.log("Có lỗi khi lấy dữ liệu");
     }
 }
     const handleStatus=(id,trangthai)=>{
-        const Confirm=window.confirm("Xac nhan don hang");
-        if(Confirm){
-            console.log({id,trangthai})
-            updateStatus(id,trangthai);
-           
-            return;
+
+        switch(trangthai){
+            case "HUY":
+                const confirm1=window.confirm("Xác nhận hủy đơn hàng này");
+                if(confirm1){
+                    console.log({id,trangthai})
+                    updateStatus(id,trangthai);
+                    return;
+                }
+                break;
+            case "CHAPTHUAN":
+                const confirm2=window.confirm("Xác nhận đơn hàng này");
+                if(confirm2){
+                    console.log({id,trangthai})
+                    updateStatus(id,trangthai);
+                    return;
+                }
+                break;
+            case "GIAOHANG":
+                const confirm3=window.confirm("Xác nhận giao đơn hàng này");
+                if(confirm3){
+                    console.log({id,trangthai})
+                    updateStatus(id,trangthai);
+                    return;
+                }
+                break;
+            case "GIAOTHANHCONG":
+                const confirm4=window.confirm("Đơn hàng đã được giao đến khách hàng!!");
+                if(confirm4){
+                    console.log({id,trangthai})
+                    updateStatus(id,trangthai);
+                    return;
+                }
+                break;
+             case "HOANTAT":
+                const confirm5=window.confirm("Hoàn thành đơn hàng này??");
+                if(confirm5){
+                    console.log({id,trangthai})
+                    updateStatus(id,trangthai);
+                    return;
+                }
+                break;       
+
+
         }
+        //const Confirm=window.confirm("Xác nhận đơn hàng");
+        // if(trangthai=="HUY"){
+        // const confirm2=window.confirm("Xác nhận hủy đơn hàng này");
+        // if(confirm2){
+        //     console.log({id,trangthai})
+        //     updateStatus(id,trangthai);
+        //     return;
+        // }
+        // }
+        // const confirm2=window.confirm("Xác nhận hủy đơn hàng này");
+        // if(Confirm){
+        //     console.log({id,trangthai})
+        //     updateStatus(id,trangthai);
+        //     return;
+        // }
        console.log("Khong xac nhan don hang");
     }
   return (
     <div >
       
     <div class=" w-[99.3%] relative h-[670px]  shadow-md sm:rounded-lg  p-2 mt-2 ml-2">
+        <ToastContainer/>
   <div className='flex justify-between'>
   <input type="text" className='border border-blue-500 w-[27%] rounded p-1 py-2 mb-2' onChange={(e)=>setSearch(e.target.value)}  placeholder='Tìm kiếm theo mã đơn hàng ... ' />
   <div className='me-14 mt-2 ' >
@@ -128,19 +183,7 @@ const updateStatus=async(id,trangthai)=>{
                 </th>
                 <th scope="col" class="px-6 py-3 relative  group">
                     Trạng thái
-                    {/* <div className='z-99
-                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out
-                      lg:top-[30px]  xl:top-[40px] rounded left-[5px] absolute w-full lg:w-[200px] group-hover:block'>
-                       <ul className='flex flex-col  py-3 bg-blue-200 text-blue-600 rounded'>
-                       <li onClick={()=>setStatus("")} className='border-b cursor-pointer p-2 hover:bg-amber-400'>Tất cả</li>
-                        <li onClick={()=>setStatus("CHOXULY")} className='border-b cursor-pointer p-2 hover:bg-amber-400'>Chờ xử lý</li>
-                        <li onClick={()=>setStatus("CHAPTHUAN")} className='border-b cursor-pointer p-2 hover:bg-amber-400'>Xác nhận</li>
-                        <li onClick={()=>setStatus("GIAOHANG")}  className='border-b cursor-pointer p-2 hover:bg-amber-400'>Đang giao</li>
-                        <li onClick={()=>setStatus("GIAOTHANHCONG")} className='border-b cursor-pointer p-2 hover:bg-amber-400'>Giao thành công</li>
-                        <li onClick={()=>setStatus("HOANTAT")} className=' cursor-pointer p-2 hover:bg-amber-400'>Hoàn tất</li>
-                        <li onClick={()=>setStatus("HUY")} className=' cursor-pointer p-2 hover:bg-amber-400'>Huy</li>
-                       </ul>
-                    </div> */}
+            
                 </th>
                 
                 <th scope="col" class="px-6 py-3">
@@ -210,10 +253,19 @@ const updateStatus=async(id,trangthai)=>{
                             </td>
                         <td class="px-2 py-4">
                            {
-                           item.orderStatus=="CHOXULY"&&
-                           <button onClick={()=>handleStatus(item.order_id, "CHAPTHUAN")} title='Xac nhan' className='text-green-700 bg-green-200 p-1 rounded mr-2 mb-1 min-w-12'>
+                           item.orderStatus=="CHOXULY"&&(
+                            <>
+                            
+                           <button onClick={()=>handleStatus(item.order_id, "CHAPTHUAN")} title='Xác nhận' className='cursor-pointer text-green-700 bg-green-200 p-1 rounded mr-2 mb-1 min-w-12'>
                             <i class="fa-solid fa-check"></i>
                            </button>
+                           
+                            <button onClick={()=>handleStatus(item.order_id, "HUY")} className='text-red-700 bg-red-200 p-1 rounded min-w-10 cursor-pointer' title='Hủy đơn hàng'>
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            </>
+                           )
+                           
                            }
                            {
                            item.orderStatus=="CHAPTHUAN"&&
@@ -232,11 +284,9 @@ const updateStatus=async(id,trangthai)=>{
                            className='text-blue-700 bg-blue-200 p-1 rounded mr-2 mb-1 min-w-28'>Hoàn thành</button>
                            }
                             {
-                           item.orderStatus=="HOANTAT"&&<button className=' p-1 rounded mr-2 mb-1 min-w-28 cursor-not-allowed'></button>
+                           item.orderStatus=="HOANTAT"&&("")
                             }
-                            <button className='text-red-700 bg-red-200 p-1 rounded min-w-10 cursor-not-allowed'>
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                           
                         </td>
                        
                     </tr>
@@ -256,235 +306,8 @@ const updateStatus=async(id,trangthai)=>{
         </tbody>
     </table>
     
-
-
     </div>
 
-
-
-{/* Thong ke */}
-    {/* <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg bg-blue-200 p-2 mt-2 ml-2">
-  <input type="text" className='border border-red-500 w-[27%] rounded-lg p-1 mb-2' placeholder='Search product ... ' />
-    <table class="w-[100%] text-sm text-left text-gray-500 rounded-lg">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                    </div>
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Product name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Color
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Category
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Price
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
-                </th>
-                <td class="px-6 py-4">
-                    Silver
-                </td>
-                <td class="px-6 py-4">
-                    Laptop
-                </td>
-                <td class="px-6 py-4">
-                    $2999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-2" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-2" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
-                </th>
-                <td class="px-6 py-4">
-                    White
-                </td>
-                <td class="px-6 py-4">
-                    Laptop PC
-                </td>
-                <td class="px-6 py-4">
-                    $1999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-3" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
-                </th>
-                <td class="px-6 py-4">
-                    Black
-                </td>
-                <td class="px-6 py-4">
-                    Accessories
-                </td>
-                <td class="px-6 py-4">
-                    $99
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-3" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple Watch
-                </th>
-                <td class="px-6 py-4">
-                    Black
-                </td>
-                <td class="px-6 py-4">
-                    Watches
-                </td>
-                <td class="px-6 py-4">
-                    $199
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-3" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple iMac
-                </th>
-                <td class="px-6 py-4">
-                    Silver
-                </td>
-                <td class="px-6 py-4">
-                    PC
-                </td>
-                <td class="px-6 py-4">
-                    $2999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-3" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple AirPods
-                </th>
-                <td class="px-6 py-4">
-                    White
-                </td>
-                <td class="px-6 py-4">
-                    Accessories
-                </td>
-                <td class="px-6 py-4">
-                    $399
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-table-search-3" class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    iPad Pro
-                </th>
-                <td class="px-6 py-4">
-                    Gold
-                </td>
-                <td class="px-6 py-4">
-                    Tablet
-                </td>
-                <td class="px-6 py-4">
-                    $699
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            
-        </tbody>
-    </table>
-    <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of <span class="font-semibold text-gray-900 dark:text-white">1000</span></span>
-        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-            </li>
-            <li>
-                <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-            </li>
-            <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-            </li>
-        </ul>
-    </nav>
-
-
-    </div> */}
     </div>
   )
 }

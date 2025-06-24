@@ -19,7 +19,7 @@ const Product_Update = () => {
     description: "",
     quantity: null,
     status: null,
-    categoryId: "",
+    
     toppings: [],
   });
 
@@ -46,7 +46,6 @@ const Product_Update = () => {
         description: data.description,
         quantity: data.quantity,
         status: data.status,
-        categoryId: data.categoryId,
         toppings: data.toppings.map((item)=>item.toppingId),
         categoryId:data.category?.category_id
       
@@ -125,7 +124,7 @@ const Product_Update = () => {
       });
 
       if (res.status === 200) {
-        toast.success("Cập nhật sản phẩm thành công");
+        toast.success("Cập nhật sản phẩm thành công",{autoClose:1000});
         setNewImages([]);
       }
     } catch (error) {

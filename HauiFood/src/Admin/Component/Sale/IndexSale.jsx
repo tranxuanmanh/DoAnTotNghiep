@@ -12,7 +12,7 @@ const IndexSale = () => {
     const [editVoucherId, setEditVoucherId] = useState(null);
     const [isModalUpdate, setIsModalUpdate] = useState(false);
 
-    const [filterStatus,setFileterStatus]=useState("CHUAKICHHOAT");
+    const [filterStatus,setFileterStatus]=useState("");
     const getAllVoucher=async()=>{
         try{
         const responseData=await axios.get("http://localhost:8080/api/v1/voucher/all");
@@ -117,20 +117,20 @@ const IndexSale = () => {
     }
   };
 
-  const updateStatus = async (id) => {
-    const isConfirmed = window.confirm("Bạn có chắc chắn muốn thay đổi trạng thái khuyến mãi này?");
-    if (!isConfirmed) return;
+  // const updateStatus = async (id) => {
+  //   const isConfirmed = window.confirm("Bạn có chắc chắn muốn thay đổi trạng thái khuyến mãi này?");
+  //   if (!isConfirmed) return;
   
-    try {
-      await axios.put(`http://localhost:8080/api/v1/voucher/status/${id}`);
-      alert("Thay đổi trạng thái khuyến mãi thành công!");
-      // Sau khi xóa thành công, gọi lại danh sách
-      window.location.reload();
-      getAllCategory();
-    } catch (error) {
-      console.log("Thay đổi trạng thái danh mục thất bại", error);
-    }
-  };
+  //   try {
+  //     await axios.put(`http://localhost:8080/api/v1/voucher/status/${id}`);
+  //     alert("Thay đổi trạng thái khuyến mãi thành công!");
+  //     // Sau khi xóa thành công, gọi lại danh sách
+  //     window.location.reload();
+  //     getAllCategory();
+  //   } catch (error) {
+  //     console.log("Thay đổi trạng thái danh mục thất bại", error);
+  //   }
+  // };
 //Phân trang
 const [currentPage, setCurrentPage] = useState(1);
 const [itemsPerPage] = useState(10); // Số item mỗi trang
@@ -171,10 +171,6 @@ const searchByCode=async(value)=>{
 }
 
 //Modal update voucher
-const handleUpdate=()=>{
-    setIsModalUpdate(true);
-
-}
 
   return (
     <div>
@@ -189,7 +185,7 @@ const handleUpdate=()=>{
 <button className='bg-green-500 rounded p-2 text-white font-semibold' onClick={() => setIsModalAdd(true)} >+ Thêm mã khuyến mãi mới</button>
 
 <div className='flex gap-x-2'>
-  <button onClick={()=>setFileterStatus("")} title='Chưa hoạt động' className='bg-yellow-100 text-yellow-600 py-2 px-2 font-semibold rounded cursor-pointer'>Tất cả</button>
+  <button onClick={()=>setFileterStatus("")} title='Tất cả' className='bg-yellow-100 text-yellow-600 py-2 px-2 font-semibold rounded cursor-pointer'>Tất cả</button>
   <button onClick={()=>setFileterStatus("CHUAKICHHOAT")} title='Chưa hoạt động' className='bg-red-100 text-red-600 py-2 px-2 font-semibold rounded cursor-pointer'>Chưa kích hoạt</button>
   <button onClick={()=>setFileterStatus("DANGHOATDONG")} title='Hoạt động' className='bg-green-100 text-green-600 py-2 px-2 font-semibold rounded cursor-pointer'>Hoạt động</button>
   <button onClick={()=>setFileterStatus("HETHAN")} title='Hết hạn' className='bg-gray-100 text-black py-2 px-2 font-semibold rounded cursor-pointer'>Hết hạn</button>

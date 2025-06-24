@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast, ToastContainer } from 'react-toastify';
 import useAuth from '../../../Login_Logout/CustomHook';
 
 const UpdateCategory = () => {
     const {id}=useParams();
+    const navigate=useNavigate();
     console.log(id);
     const [categoryUp,setCategoryUp]=useState({});
     const [category,setCategory]=useState({
@@ -162,8 +163,10 @@ const UpdateCategory = () => {
  
   
   </div>
-  <button   type="submit" class=" text-white bg-blue-700 hover:bg-blue-800  font-bold rounded-lg text-sm w-full sm:w-auto px-3.5 py-2.5 text-center ">Cập nhật danh muc</button>
+  <button  type="submit" class=" text-white bg-blue-700 hover:bg-blue-800  font-bold rounded-lg text-sm w-full sm:w-auto px-3.5 py-2.5 text-center ">Cập nhật danh mục</button>
+ 
   </form>
+   <button onClick={()=>navigate("/admin/category-manager")} type="submit" class="mt-2  text-white bg-yellow-500 hover:bg-blue-800  font-bold rounded-lg text-sm w-30 px-3.5 py-2.5 text-center ">Hủy</button>
     </div>
   )
 }

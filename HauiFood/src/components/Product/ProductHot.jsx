@@ -13,10 +13,10 @@ const ProductHot = ({products}) => {
 
 
 
-  const [visibleCount, setVisibleCount] = useState(3); // bắt đầu hiển thị 3 sản phẩm
+  const [visibleCount, setVisibleCount] = useState(10); // bắt đầu hiển thị 3 sản phẩm
   
     const handleShowMore = () => {
-      setVisibleCount(prev => prev + 3);
+      setVisibleCount(prev => prev + 5);
     };
   return (
 
@@ -26,7 +26,8 @@ const ProductHot = ({products}) => {
       <div className=' py-2 px-1 flex gap-x-3 flex-wrap gap-y-2 justify-start'>
         <div>
           <Link to="/danhmuc/hot">
-          <img className='w-[450px] h-[260px] rounded' src="//theme.hstatic.net/1000242782/1000838257/14/collection_one_img.jpg?v=620" alt="" />
+        {/* //theme.hstatic.net/1000242782/1000838257/14/collection_one_img.jpg?v=620 */}
+          <img className='w-[450px] h-[260px] rounded' src="https://img.freepik.com/free-psd/food-menu-restaurant-facebook-cover-template_106176-384.jpg?semt=ais_hybrid&w=740" alt="" />
           </Link>
          
         </div>

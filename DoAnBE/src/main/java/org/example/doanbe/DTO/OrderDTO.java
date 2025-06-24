@@ -1,12 +1,10 @@
-package org.example.doanbe.TestDTO;
+package org.example.doanbe.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.doanbe.Entities.Enum.PAYMETHOD;
 import org.example.doanbe.Entities.Enum.SHIPPINGMETHOD;
-import org.example.doanbe.Entities.Users;
-import org.example.doanbe.Entities.Voucher;
 
 import java.time.LocalDateTime;
 import java.util.List;

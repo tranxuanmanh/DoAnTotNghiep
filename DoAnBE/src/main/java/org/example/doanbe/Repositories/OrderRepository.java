@@ -1,4 +1,4 @@
-package org.example.doanbe.TestRepository;
+package org.example.doanbe.Repositories;
 
 import org.example.doanbe.DTO.MonthOrderStatusDTO;
 import org.example.doanbe.Entities.Enum.ORDERSTATUS;
@@ -17,6 +17,17 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
    @Query(value = "select * from orders o where o.status=?1 ",nativeQuery = true)
     List<Orders> getAllOrderByStatus(String status);
+
+   //test lay theo page
+//   @Query(
+//           value = "SELECT * FROM orders o WHERE o.status = ?1",
+//           countQuery = "SELECT COUNT(*) FROM orders o WHERE o.status = ?1",
+//           nativeQuery = true
+//   )
+//   Page<Orders> lstOrderByStatus(String status, Pageable pageable);
+
+
+
     @Query(value = "select sum(o.total_amount) from orders o " +
             "where o.status in ('HOANTAT','GIAOTHANHCONG')  and date(completed_at)=STR_TO_DATE(?1, '%d-%m-%Y')",
             nativeQuery = true)

@@ -84,7 +84,7 @@ const Forget_Pass = () => {
    )}
       <div class=" ms-20 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 w-full bg-gradient-to-l from-red-300 to-red-500">
         <div className=' w-full  flex justify-center p-2'>
-        <img class="w-26 h-24 mr-2 mb-[-25px]" src="../public/HauiFood1.png" alt="logo"/>
+        <img class="w-26 h-24 mr-2 mb-[-25px]" src="../public/iconDoAn.png" alt="logo"/>
         </div>
           
           <div class="p-6 space-y-4 md:space-y-6 sm:p-8 w-[100%]">

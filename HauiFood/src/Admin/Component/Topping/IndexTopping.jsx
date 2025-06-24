@@ -47,7 +47,7 @@ const totalPages = Math.ceil(toppings.length / itemsPerPage);
 
   return (
     <>  
-     <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg bg-blue-200 p-2 mt-2 ml-2">
+     <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg p-2 mt-2 ml-2">
     <button onClick={()=>setOpenModalAdd(true)} className='py-2 px-2 bg-yellow-400 rounded font-semibold mb-2'>+ Thêm topping</button>
     <div className='mb-2'>
     <p className='font-semibold mb-1'>Trạng thái</p>

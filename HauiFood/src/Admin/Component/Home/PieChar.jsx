@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+//Thống kê doanh thu theo ngày, năm
 
 const PieChart = () => {
-  const [day,setDay]=useState("2025-05-08");
+
+
+  const [day,setDay]=useState("23-06-2025");
   const [year,setYear]=useState("2025");
   const [moneyDay,setMoneyDay]=useState(0);
   const [moneyYear,setMoneyYear]=useState(0);
@@ -13,16 +16,17 @@ const PieChart = () => {
       const [yyyy, mm, dd] = dateStr.split("-");
       return `${dd}-${mm}-${yyyy}`;
     };
+   
 //Doanh thu theo ngay
   const getMoneyInDay=async()=>{
     try{
     const res=await axios.get(`http://localhost:8080/api/v1/order/doanhthuNgay?date=${formatDateForAPI(day)}`);
     const money1=res.data.data;
     setMoneyDay(money1);
-    //console.log({res})
+   
     }catch(error){
     setMoneyDay(0);
-    //console.log(error);
+    
     }
   }
 
@@ -32,16 +36,17 @@ const PieChart = () => {
       const res=await axios.get(`http://localhost:8080/api/v1/order/doanhthuNam?nam=${year}`);
       const money2=res.data.data;
       setMoneyYear(money2);
-      //console.log({res})
+     
       }catch(error){
       setMoneyYear(0);
-      //console.log(error);
+     
       }
     }
 
     useEffect(()=>{
       getMoneyInDay()
       getMoneyInYear()
+     
     },[day,year])
 
   return (

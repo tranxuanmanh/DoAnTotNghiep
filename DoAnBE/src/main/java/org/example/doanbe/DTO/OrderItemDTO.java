@@ -1,9 +1,8 @@
-package org.example.doanbe.TestDTO;
+package org.example.doanbe.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.doanbe.Entities.Enum.PAYMETHOD;
 
 import java.util.List;
 

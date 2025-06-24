@@ -120,7 +120,7 @@ const SignUp = () => {
    )}
   <div class=" ms-34 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 w-full bg-gradient-to-l from-red-400 to-red-500">
     <div className=' w-full  flex justify-center p-2'>
-    <img class="mb-[-40px] mr-2 w-26 h-22" src="../public/HauiFood1.png" alt="logo"/>
+    <img class="mb-[-40px] mr-2 w-26 h-22" src="../public/iconDoAn.png" alt="logo"/>
     </div>
       
       <div class="p-6 space-y-2 md:space-y-6 sm:p-8 w-[100%]">

@@ -16,14 +16,12 @@ const ProductDrink = ({products}) => {
   };
 
 
-
-
   return (
     <div>
         <div className='p-1 w-[100%] '>
       <div className=' flex justify-between items-end w-[100%] border-b border-dotted border-red-400 py-1 mb-3'>
       <h2 className="text-xl font-bold ">Đồ uống 🍹🍹</h2>
-      <Link to="/danhmuc/2" className="text-blue-500 underline me-3 font-semibold">Xem tất cả</Link>
+      <Link to="/danhmuc/1" className="text-blue-500 underline me-3 font-semibold">Xem tất cả</Link>
       </div>
       <div>
         <img className=' w-[100%] h-40 mb-2' src="https://pizzahut.vn/_next/image?url=https%3A%2F%2Fcdn.pizzahut.vn%2Fimages%2FWEB_V3%2FCATEGORIES_MenuTool%2FCateBanner_Drinks_Desktop_VI.webp&w=1170&q=100" alt="" />

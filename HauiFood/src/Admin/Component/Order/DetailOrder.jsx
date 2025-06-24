@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router'
 import DateFormart from '../Base/DateFormart';
 import useAuth from '../../../Login_Logout/CustomHook';
 import { toast, ToastContainer } from 'react-toastify';
+import ExportPDF from '../Order_Pdf/PdfTemplate';
 
 const DetailOrder = () => {
     const {code}=useParams();
@@ -34,10 +35,16 @@ const DetailOrder = () => {
   return (
     <div className='flex flex-col m-4'>
         <ToastContainer/>
-        <Link to="/admin/order-manager"  className='hover:text-yellow-400 cursor-pointer'>
+        <Link to="/admin/order-manager"  className='hover:text-yellow-400 cursor-pointer border-gray-200 border-b'>
         <i class="fa-solid fa-arrow-left me-3"></i>
         Quay lai
         </Link>
+
+        {/* Xuat file pdf */}
+        <div className='text-end mt-5'>
+            <ExportPDF detail={detail} product={product}/>
+        </div>
+       
        
         <div className='w-full text-center'>
 
@@ -68,8 +75,8 @@ const DetailOrder = () => {
                 <li>Hình thức vận chuyển:
              
                     {detail.shippingMethod==="GIAOVAOLUC"?(<p>Giao vào lúc: {<DateFormart value={detail.deliveryTime}/>}</p>):""}
-                     {detail.shippingMethod==="GIAONGAY"?(<p>Giao ngay</p>):""}
-                     {detail.shippingMethod==="DENLAY"?(<p>Đến cửa hàng lấy</p>):""}
+                    {detail.shippingMethod==="GIAONGAY"?(<p>Giao ngay</p>):""}
+                    {detail.shippingMethod==="DENLAY"?(<p>Đến cửa hàng lấy</p>):""}
                    
                     
                      </li>
@@ -79,13 +86,13 @@ const DetailOrder = () => {
             </div>
      </div>
      <div className='border bg-gradient-to-l to-green-300 from-sky-300 p-3 rounded mt-1'>
-        <p className='font-bold'>Tình trạng đơn hàng: 
-             {detail.orderStatus=="CHOXULY"?(<span className='text-red-700'>Chờ xác nhận</span>):"" }
-            {detail.orderStatus=="CHAPTHUAN"?(<span className='text-teal-700'>Xác nhận</span>):""}
-            {detail.orderStatus=="GIAOHANG"?"Giao hàng":"" }
-            {detail.orderStatus=="GIAOTHANHCONG"?"Giao thành công":""}
-            {detail.orderStatus=="HUY"?"Đơn bị hủy":"" }
-            {detail.orderStatus=="HOANTAT"?(<span className='text-blue-700'>Hoàn thành</span>):""}
+        <p className='font-bold'>Tình trạng đơn hàng : 
+            {detail.orderStatus=="CHOXULY"?(<span className='text-red-700'> Chờ xác nhận</span>):"" }
+            {detail.orderStatus=="CHAPTHUAN"?(<span className=''> Chờ giao hàng</span>):""}
+            {detail.orderStatus=="GIAOHANG"?" Đang giao hàng":"" }
+            {detail.orderStatus=="GIAOTHANHCONG"?" Giao thành công":""}
+            {detail.orderStatus=="HUY"?" Đơn bị hủy":"" }
+            {detail.orderStatus=="HOANTAT"?(<span className='text-blue-700'> Hoàn thành</span>):""}
         </p>
         {detail.orderStatus=="HOANTAT"?(<p className='font-bold'>Hoàn thành lúc: {<DateFormart value={detail.completedAt}/>}</p>):("")}
         <p className='font-bold'>Voucher: Không</p>
@@ -171,8 +178,16 @@ const DetailOrder = () => {
          {
             detail!=null&&(
                 <tr >
-                    <td colSpan={7}>
-                    <p className='my-2 text-end me-5 text-black font-bold text-lg'>Tổng tiền : {detail.totalAmount?.toLocaleString()} đ</p>
+                    <td colSpan={7} >
+                    <p className='my-2  me-12 text-black text-lg text-end'>Tạm tính : {product.reduce((total, item) => total + item.subPrice, 0).toLocaleString()} đ</p>
+                    <p className='my-2 text-end me-12 text-black text-lg  '>Giảm giá : 0 đ</p>
+                    <p className='my-2 text-end me-12 text-black text-lg '>Phí ship : 
+                    {detail.shippingMethod==="GIAOVAOLUC"?"12.000 đ":""}
+                    {detail.shippingMethod==="GIAONGAY"?"15.000 đ":""}
+                    {detail.shippingMethod==="DENLAY"?"0 đ":""}
+                        
+                    </p>
+                    <p className='my-2 text-end me-10 text-black font-bold text-lg'>Tổng tiền : {detail.totalAmount?.toLocaleString()} đ</p>
                     </td>
                 </tr>
             )

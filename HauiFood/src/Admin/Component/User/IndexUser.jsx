@@ -73,6 +73,9 @@ const IndexUser = () => {
                  <th scope="col" class="px-6 py-3">
                     Ngày tạo
                 </th>
+                <th scope="col" class="px-6 py-3">
+                   Tình trạng tài khoản
+                </th>
                  <th scope="col" class="px-6 py-3">
                     Trạng thái
                 </th>
@@ -101,6 +104,9 @@ const IndexUser = () => {
                 </td>
                 <td class="px-6 py-4">
                    {item.createdAt}
+                </td>
+                <td class="px-6 py-4">
+                   {item.verified?(<p className='font-semibold text-green-500'>Đã xác thực</p>):(<p className='font-semibold text-green-500'>Chưa xác thực</p>)}
                 </td>
                 <td class="px-6 py-4">
                    {item.status?(<i

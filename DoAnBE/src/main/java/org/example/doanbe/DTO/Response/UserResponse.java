@@ -14,6 +14,7 @@ public class UserResponse {
     private String username;
     private String phone;
     private Boolean status;
+    private Boolean verified;
     private String email;
     private LocalDateTime createdAt;
 }

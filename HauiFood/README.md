@@ -19,6 +19,7 @@ npm install react-datepicker --save
 npm install chart.js react-chartjs-2
 npm i react-toastify(Thông báo)
 npm install react-modal(Hiển thị thông báo)
+npm i jspdf-autotable
 ## Cdn
 Gán vào phần header : 
 <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />

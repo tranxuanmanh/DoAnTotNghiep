@@ -1,7 +1,8 @@
 import "./App.css";
-import ImageSlider from "./components/ImageSlider";
-import Header from "./components/Header";
-import Product from "./components/Product";
+// import ImageSlider from "./components/ImageSlider";
+import Header from "./components/Base/Header";
+
+import ProductBoss from "./components/Product/ProductBoss";
 import HomeAdmin from "./Admin";
 import { Route, Routes } from "react-router";
 import Admin1 from "./Admin/Component/Home/IndexHome";
@@ -31,9 +32,9 @@ import LastOrder from "./components/Cart/LastOrder";
 import DetailUser from "./Login_Logout/DetailUser";
 import Voucher from "./components/Voucher/Voucher";
 import DetailOrderUserID from "./Login_Logout/DetailOrderUserId";
-import { useEffect } from "react";
+
 import { toast, ToastContainer } from "react-toastify";
-import useAuth from "./Login_Logout/CustomHook";
+
 import ReviewForm from "./components/Reviews/ReviewForm";
 
 import DanhMucIndex from "./components/DanhMucSanPham/DanhMucIndex";
@@ -52,50 +53,56 @@ import CapNhatTinTuc from "./Admin/Component/TinTuc/CapNhatTinTuc";
 import NhanVienIndex from "./Admin/Component/NhanVien/NhanVienIndex";
 import IndexDanhGia from "./Admin/Component/DanhGia/indexDanhGia";
 
+import useCheckJwt from "./Admin/Component/Base/CheckJwt";
+import InfoAdmin from "./Admin/Component/User/InfoAdmin";
+
 
 function App() {
-  //Kiểm tra token xem hết hạn chưa
-  const {logout}=useAuth();
-  const isTokenExpired = (token) => {
-    if (!token) return true;
+  // //Kiểm tra token xem hết hạn chưa
+  // const {logout}=useAuth();
+  // const isTokenExpired = (token) => {
+  //   if (!token) return true;
   
-    try {
-      const payloadBase64 = token.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64)); // decode base64
-      const currentTime = Math.floor(Date.now() / 1000); // thời gian hiện tại tính bằng giây
+  //   try {
+  //     const payloadBase64 = token.split('.')[1];
+  //     const decodedPayload = JSON.parse(atob(payloadBase64)); // decode base64
+  //     const currentTime = Math.floor(Date.now() / 1000); // thời gian hiện tại tính bằng giây
   
-      return decodedPayload.exp < currentTime; // true nếu đã hết hạn
-    } catch (error) {
-      console.error("Token không hợp lệ:", error);
-      return true; // nếu lỗi thì coi như hết hạn luôn
-    }
-  };
+  //     return decodedPayload.exp < currentTime; // true nếu đã hết hạn
+  //   } catch (error) {
+  //     console.error("Token không hợp lệ:", error);
+  //     return true; // nếu lỗi thì coi như hết hạn luôn
+  //   }
+  // };
 
 
-    useEffect(() => {
-      const interval = setInterval(() => {
-        const token = String(localStorage.getItem("token"));
-        console.log(token);
-        if (isTokenExpired(token)) {
-          toast.error("Phiên đăng nhập đã hết hạn!",{autoClose:2000});
-          setTimeout(()=>{
-          logout();
-          window.location.href = "/logout";
-          },3000)
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       const token = String(localStorage.getItem("token"));
+  //       console.log(token);
+  //       if (isTokenExpired(token)) {
+  //         toast.error("Phiên đăng nhập đã hết hạn!",{autoClose:2000});
+  //         setTimeout(()=>{
+  //         logout();
+  //         window.location.href = "/logout";
+  //         },3000)
          
-        }
-      }, 10 * 60 * 1000); // 30 phút
+  //       }
+  //     }, 10 * 60 * 1000); // 30 phút
     
-      return () => clearInterval(interval);
-    }, []);
+  //     return () => clearInterval(interval);
+  //   }, []);
+
+  //Gọi hook kiểm tra jwt
+  useCheckJwt();
   
   return (
     <>
     <ToastContainer/>
 <Routes>
   <Route path="/" element={<Header/>}>
-    <Route index element={<Product />} /> {/* Tương ứng path="/" */}
-    <Route path="trang-chu" element={<Product />} />
+    <Route index element={<ProductBoss />} /> {/* Tương ứng path="/" */}
+    <Route path="trang-chu" element={<ProductBoss />} />
     <Route path="cart" element={<CartPage/>}/>
     <Route path="voucher" element={<Voucher/>}/>
     <Route path="checkout" element={<Checkout/>}/>
@@ -120,21 +127,11 @@ function App() {
     <Route path="/status-payment" element={<StatusPayment/>}/>
 </Routes>
 
-{/* <Route path="/login" element={<Login/>}/> 
-  <Route path="/signUp" element={<SignUp/>}/> 
-  <Route path="/logout" element={<Logout/>}/> 
-  <Route path="/verify-token" element={<Verify_Token/>}/>
-  <Route path="/forget-pass" element={<Forget_Pass/>}/> 
-  <Route path="/change-pass" element={<Change_Pass/>}/>
-  <Route path="/test" element={<Test/>} />
-  <Route path="/cart" element={<CartPage/>} />
-  <Route path="/checkout" element={<Checkout/>}/> */}
-
 
   <Routes>
   <Route path="/admin" element={<RequirementAdmin/>}>
       <Route path="" element={<HomeAdmin />}>
-    
+      <Route path="info" element={<InfoAdmin />}/>
       <Route path="home" element={<Admin1 />} />
       <Route path="order-manager" element={<IndexOrder />} />
       <Route path="user-manager" element={<IndexUser />} />

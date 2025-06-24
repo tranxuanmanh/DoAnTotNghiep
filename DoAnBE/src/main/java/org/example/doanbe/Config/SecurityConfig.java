@@ -57,17 +57,18 @@ public AuthenticationManager authenticationManager(AuthenticationConfiguration c
                 )
                 .authorizeHttpRequests(
                         auth->auth.requestMatchers(EndPoints.All).permitAll()
-                                   .requestMatchers(EndPoints.API_ADMIN_Client).hasAnyAuthority("ROLE_ADMIN","ROLE_CLIENT")
+                                   .requestMatchers(EndPoints.API_ADMIN_Client).hasAnyAuthority("ROLE_ADMIN","ROLE_CLIENT","ROLE_STAFF")
 
                                 .requestMatchers(HttpMethod.POST,
                                            "/api/v1/product",
                                            "/api/v1/voucher",
                                            "/api/v1/category",
                                            "/api/v1/news"
-                                ).hasAuthority("ROLE_ADMIN")
+                                ).hasAnyAuthority("ROLE_ADMIN","ROLE_STAFF")
 
                                 .requestMatchers(HttpMethod.GET,
                                         "/api/v1/user/role/**"
+
                                 ).hasAuthority("ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.PUT,

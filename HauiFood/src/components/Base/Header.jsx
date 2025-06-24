@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import ImageSlider from './ImageSlider';
 import { Link, matchPath, Outlet, useLocation, useNavigate } from 'react-router';
-import useAuth from '../Login_Logout/CustomHook';
+import useAuth from '../../Login_Logout/CustomHook';
 import Category from './Category';
-import Footer from '../Footer';
+import Footer from '../Base/Footer';
 
 
 
@@ -52,7 +52,8 @@ const Header = () => {
     <div>
        <nav className='flex justify-between items-center gap-2  p-2 '>
       <div className='flex-1 '>
-        <img className='h-20 mx-auto' src="https://theme.hstatic.net/1000242782/1000838257/14/logo.png?v=620" alt="Jollibee" />
+        {/* https://theme.hstatic.net/1000242782/1000838257/14/logo.png?v=620 */}
+        <img className='h-30  mx-auto' src="../public/garan.png" alt="Jollibee" />
        
       </div>
       <div className='flex-1 text-start'>
@@ -74,7 +75,7 @@ const Header = () => {
      onChange={ (e) => setSearchName(e.target.value)}
       type="text" 
       id="search" 
-      placeholder="search name product, category name ..." 
+      placeholder="Search name product ..." 
       class="block w-full p-2.5 pr-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
       required 
     />
@@ -168,7 +169,7 @@ const Header = () => {
             </li>
             <li className='hover:text-red-500 p-1 '><Link to="/voucher" >KHUYẾN MÃI</Link></li>
             <li className='hover:text-red-500 p-1 '><Link to="/tintuc" >TIN TỨC</Link></li>  
-            <li className='hover:text-red-500 p-1 '><a href="#" >LIÊN HỆ</a></li>    
+            {/* <li className='hover:text-red-500 p-1 '><a href="#" >LIÊN HỆ</a></li>     */}
           </ul>
         </div>
         
@@ -179,7 +180,7 @@ const Header = () => {
               <i class="fa-solid fa-cart-shopping text-xl  p-0.5 " title='Giỏ hàng'></i>
               </Link>
              
-              <p className='absolute top-[2px] right-[1px] text-sm  rounded-2xl px-1.5 bg-red-500 text-white '>{items?.length>0?items.length:0}</p>
+              {/* <p className='absolute top-[2px] right-[1px] text-sm  rounded-2xl px-1.5 bg-red-500 text-white '>{items?.length>0?items.length:0}</p> */}
             </li>
            
             <li className='w-[40%]'></li>

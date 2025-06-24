@@ -87,7 +87,6 @@ const IndexProduct = () => {
           }
     });
     toast.success("Đã xóa thành công!", {
-      position: "top-center",
       autoClose: 2000,
     });
     await getAllproduct();
@@ -95,7 +94,7 @@ const IndexProduct = () => {
     setIdDelete(null);
   }catch(error){
     toast.error("Có lỗi khi xóa sản phẩm", {
-      position: "top-center",
+   
       autoClose: 2000,
     });
   }
@@ -119,9 +118,17 @@ const updateStatus=async(id)=>{
           Authorization: `Bearer ${getToken()}`
         }
       })
-      getAllproduct();
+      toast.success("Cập nhật sản phẩm thành công",{
+        autoClose:1000,
+        onClose:()=>{
+          getAllproduct();
+        }
+      
+      });
+     
     }catch(error){
       console.log({error});
+      toast.error("Cập nhật sản phẩm thất bại");
       }
  
   //Nếu thành công thì gọi lại
@@ -134,7 +141,7 @@ const navigate=useNavigate();
     // 3 table
     <>
       {/* Phan dau */}
-      <div class=" w-[99.3%] h-[95vh] relative shadow-md sm:rounded-lg bg-blue-200 p-2 mt-2 ml-2">
+      <div class=" w-[99.3%] h-[95vh] relative shadow-md sm:rounded-lg p-2 mt-2 ml-2">
         <ToastContainer />
         <div className="flex justify-between items-center">
           <div className="flex">
@@ -154,8 +161,8 @@ const navigate=useNavigate();
           />
         </div>
         <div className="h-[85%] overflow-y-auto ">
-          <table class="w-[100%] text-sm text-left text-gray-500 rounded-lg">
-            <thead class="text-xs sticky top-0 z-10 text-gray-700 uppercase bg-gray-200 ">
+          <table class="w-[100%] text-sm text-left text-black rounded-lg">
+            <thead class="text-xs sticky top-0 z-10 text-black uppercase bg-gray-200 ">
               <tr>
                 <th scope="col" class="p-4">
                   <div class="flex items-center">

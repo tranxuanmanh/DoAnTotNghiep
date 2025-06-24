@@ -97,10 +97,17 @@ public class ProductImpl implements ProductService {
                               List<String> ImagesRemove
     ) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new MyException("Không tồn tại sản phẩm này"));
+        Double price= productDTO.getPrice();
+        Double priceDiscount=productDTO.getPriceDiscount();
+        Double giaGiam = price * priceDiscount / 100.0;
+        Double priceSell=price-giaGiam;
 
         product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setPriceDiscount(productDTO.getPriceDiscount());
+        product.setPrice(price);
+        product.setPriceDiscount(priceDiscount);
+        product.setPriceSell(priceSell);
+        //Cập nhật so luong
+        product.setQuantity(product.getQuantity()+productDTO.getQuantity());
 
         product.setDescription(productDTO.getDescription());
         product.setTag(productDTO.getTag());

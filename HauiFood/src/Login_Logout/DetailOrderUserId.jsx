@@ -102,8 +102,8 @@ const DetailOrderUserID = () => {
            
 
             <div class="relative overflow-x-auto">
-              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+              <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400">
+                <thead class="text-xs text-black uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" class="px-6 py-3">
                     Mã đơn hàng
@@ -291,9 +291,10 @@ const DetailOrderUserID = () => {
           <td className="px-4">
             <img className="w-30 p-2" src={gt.product?.images?.[0]?.image_url}  />
           </td>
-          <td className="px-4">{gt.product?.priceSell?.toLocaleString()} đ</td>
+          <td className="px-4">{gt.priceItem.toLocaleString()} đ</td>
           <td className="px-2 text-center w-36">{gt.quantity}</td>
-          <td className="px-2 text-center">{total.toLocaleString()} đ</td>
+          {/* <td className="px-2 text-center">{total.toLocaleString()} đ</td> */}
+          <td className="px-2 text-center">{gt.subPrice.toLocaleString()} đ</td>
           <td className="px-2 text-center w-36">
             {kq?(<p onClick={()=>navigate(`/review/product/${gt.product.product_id}`,{
               state:{orderID:gt.id,name: gt.product?.name,img:gt.product?.images?.[0]?.image_url}

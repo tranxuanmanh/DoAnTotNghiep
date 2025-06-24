@@ -101,9 +101,9 @@ const Login = () => {
     }}>
   <div class="flex ms-38  items-center justify-start px-6 py-8 md:h-screen lg:py-0 mx-auto">
       <ToastContainer/>
-      <div class="  rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 w-full bg-gradient-to-l from-red-400 to-red-500">
+      <div class="  rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 w-full bg-gradient-to-l from-red-400 to-red-400">
         <div className=' w-full  flex justify-center p-y-1 mb-[-30px]'>
-        <img class="w-28 h-26 mr-2  rounded" src="../public/logoHauiFood.png" alt="logo"/>
+        <img class="w-28 h-26 mr-2  rounded" src="../public/iconDoAn.png" alt="logo"/>
         </div>
           
           <div class="p-6 space-y-4 md:space-y-6 sm:p-8 w-[100%] ">

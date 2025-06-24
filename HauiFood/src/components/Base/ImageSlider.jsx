@@ -13,22 +13,22 @@ const ImageSlider = () => {
   const [banners] = useState([
     {
       id: 1,
-      image: "https://theme.hstatic.net/1000242782/1000838257/14/slideshow_2.jpg?v=620"
+      image: "../public/anhBia3.jpg"
     },
     {
       id: 2,
-      image: "https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620"
+      image: "../public/anhBia1.jpg"
     },
     {
       id: 3,
-      image: "https://file.hstatic.net/1000242782/article/combo_owing_zalo_abf9e4f746f040d9862bec1971518300_1024x1024.png"
+      image: "../public/anhBia2.jpg"
     },
     {
       id: 4,
       image: "https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620"
     },{
       id:5,
-      image:"https://file.hstatic.net/1000242782/article/combo_owing_zalo_abf9e4f746f040d9862bec1971518300_1024x1024.png"
+      image:"https://theme.hstatic.net/1000242782/1000838257/14/slideshow_2.jpg?v=620"
     }
   ]);
 
@@ -63,11 +63,11 @@ const ImageSlider = () => {
         ))}
       </Swiper>
     </div>
-    <div className="grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-4 ms-2 w-[59%]">
+    <div className="grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-4 ms-2 w-[59%] overflow-hidden">
           <img src="https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620" alt="" />
-          <img src="https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620" alt="" />
-          <img src="https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620" alt="" />
-          <img src="https://theme.hstatic.net/1000242782/1000838257/14/slideshow_1.jpg?v=620" alt="" />
+          <img  className="w-[100%] h-42" src="../public/anhBia2.jpg" alt="" />
+          <img src="../public/anhBia1.jpg" alt="" />
+          <img className="object-cover" src="https://pozaatea.vn/wp-content/uploads/2022/08/Banner-Befood-01.png" alt="" />
     </div>
     </div>
 

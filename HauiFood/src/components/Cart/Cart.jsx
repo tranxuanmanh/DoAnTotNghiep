@@ -75,7 +75,7 @@ const handleQuantityChange = (index, newQuantity) => {
 
   //Gọi lại hàm lấy dữ liệu
   getDuLieu();
-  setReloadCart((prev) => !prev); // đổi trạng thái để trigger useEffect
+  //setReloadCart((prev) => !prev); // đổi trạng thái để trigger useEffect
   // setTimeout(()=>{
   //   window.location.reload()
   // },4000)
@@ -189,6 +189,8 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
           }
             {cartItem.map((item, index) => {
               console.log(item);
+
+
               const selectedToppings = item.product?.toppings?.filter(tp =>
                 item.toppings?.includes(tp.toppingId)
               ) || [];
@@ -243,7 +245,7 @@ const { valid, totalAfterDiscount, discount } = activeGiamGia(totalCart);
                  handleQuantityChange(index, e.target.value)} className=" border-2 w-full rounded" />
                 </div>
                 <div className="w-[20%] text-center bg-blue-100 text-blue-500 py-2 text-lg rounded">
-                {(totalPrice)?.toLocaleString()} đ
+                {totalPrice?.toLocaleString()} đ
                 </div>
                 <div className="w-[10%] flex justify-around gap-x-1">
                  

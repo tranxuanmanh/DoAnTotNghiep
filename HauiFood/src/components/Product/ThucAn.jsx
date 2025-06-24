@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router'
 import ProductItem from './ProductItem'
 
-const DoAn = ({products}) => {
+const ThucAn = ({products}) => {
   //Lấy những sản phẩm đồ ăn. Đang ví dụ nước ngọt
     const arr=["buger","Hotdog","tokoyaky","banh","kim-bap","chan-ga","khoai-mon","nem-chua-ran","nem-nuong"];
 
@@ -19,7 +19,7 @@ const DoAn = ({products}) => {
         <div className='p-1 w-[100%] '>
       <div className=' flex justify-between items-end w-[100%] border-b border-dotted border-red-400 py-1 mb-3'>
       <h2 className="text-xl font-bold ">Đồ ăn 🍔🍔</h2>
-      <Link to="/danhmuc/2" className="text-blue-500 underline me-3 font-semibold">Xem tất cả</Link>
+      <Link to="/danhmuc/4" className="text-blue-500 underline me-3 font-semibold">Xem tất cả</Link>
       </div>
       <div>
         <img className='w-[100%] h-30 object-cover  mb-3'  src="https://pizzahut.vn/_next/image?url=https%3A%2F%2Fcdn.pizzahut.vn%2Fimages%2FWEB_V3%2FCATEGORIES_MenuTool%2FPizza%20break._2025031721213884S.webp&w=1170&q=100" alt="" />
@@ -43,4 +43,4 @@ const DoAn = ({products}) => {
   )
 }
 
-export default DoAn
+export default ThucAn

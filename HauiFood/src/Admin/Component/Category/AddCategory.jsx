@@ -34,8 +34,32 @@ const AddCategory = () => {
     
   const {getToken}=useAuth();
 
+  const validateCategory = () => {
+  if (!category.name.trim()) {
+    toast.error("Tên danh mục không được để trống",{autoClose:1000});
+    return false;
+  }
+  if (!category.description.trim()) {
+    toast.error("Mô tả không được để trống",{autoClose:1000});
+    return false;
+  }
+  if (category.status === null) {
+    toast.error("Vui lòng chọn trạng thái",{autoClose:1000});
+    return false;
+  }
+  if (!(category.images instanceof File)) {
+    toast.error("Vui lòng chọn một hình ảnh",{autoClose:1000});
+    return false;
+  }
+
+  return true;
+};
+
   const handleSubmit=async (e)=>{
     e.preventDefault();
+
+    if (!validateCategory()) return; // nếu không hợp lệ thì thoát
+
     const formData = new FormData();
     formData.append("category", JSON.stringify({
       name: category?.name,
@@ -79,13 +103,13 @@ const AddCategory = () => {
   <div class="w-[60%] p-2  mb-2.5 h-[70%] grid grid-cols-1 gap-y-1 " >
       <div>
           <label for="name" class="block mb-2 text-lg font-medium text-white">Tên danh muc</label>
-          <input value={category?.name} onChange={(e)=>setCategory({...category,name:e.target.value})}  type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2    " placeholder="Tên danh muc" required />
+          <input value={category?.name} onChange={(e)=>setCategory({...category,name:e.target.value})}  type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2    " placeholder="Tên danh muc"  />
       </div>
    
     
       <div>
           <label for="mota" class="block mb-2 text-lg font-medium text-white ">Mô tả </label>
-          <textarea value={category?.description} onChange={(e)=>setCategory({...category,description:e.target.value})}   type="text" id="mota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-blue-500 block w-[80%] p-2   " placeholder="Mô tả" required />
+          <textarea value={category?.description} onChange={(e)=>setCategory({...category,description:e.target.value})}   type="text" id="mota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-blue-500 block w-[80%] p-2   " placeholder="Mô tả"  />
       </div>  
      
       <div>

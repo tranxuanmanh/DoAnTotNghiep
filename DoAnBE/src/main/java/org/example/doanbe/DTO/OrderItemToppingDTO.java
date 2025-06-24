@@ -1,4 +1,4 @@
-package org.example.doanbe.TestDTO;
+package org.example.doanbe.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

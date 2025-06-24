@@ -27,7 +27,7 @@ const ProductSale = ({products}) => {
      <div className='ms-2  flex gap-x-3 flex-wrap gap-y-2'>
      <div>
          <Link to="/danhmuc/sale">
-         <img className='w-[450px] h-[260px] rounded' src="//theme.hstatic.net/1000242782/1000838257/14/collection_one_img.jpg?v=620" alt="" />
+         <img className='w-[450px] h-[260px] rounded' src="https://static.kfcvietnam.com.vn/710x470%20%20BTTK)_KO%20KT%20(7%20PHAN).jpg" alt="" />
          </Link>
       </div>
      {filterSale.slice(0, visibleCount).map(product => (

@@ -1,10 +1,10 @@
 import React from 'react'
 import ProductHot from './ProductHot'
-import ProductAll from './ProductAll'
 import ProductDrink from './ProductDrink'
 import ProductSale from './ProductSale'
 import ProductCombo from './ProductCombo'
-import DoAn from './DoAn'
+import ThucAn from './ThucAn'
+import MonAnKhac from './MonAnKhac'
 
 const ProductIndex = ({products}) => {
   return (
@@ -16,12 +16,13 @@ const ProductIndex = ({products}) => {
           <ProductSale products={products}/>
           {/**Đồ uống :drink,sua-chua,cafe */}
           <ProductDrink products={products}/>
+          {/**Đồ ăn :Đồ ăn */}
+          <ThucAn products={products}/>
           {/**Combo :Ca do an va do uong */}
           <ProductCombo products={products}/>
-          {/**Đồ ăn :Đồ ăn */}
-          <DoAn products={products}/>
+        
           {/* Khác tag:khác*/}
-          <ProductAll products={products}/>
+          <MonAnKhac products={products}/>
      </div>
 
   )

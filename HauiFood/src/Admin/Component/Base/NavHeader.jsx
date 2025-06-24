@@ -1,9 +1,11 @@
 
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router';
 
 const NavHeader = ({toggleSidebar}) => {
   const [timeNow,setTimeNow]=useState("");
-  
+  const userInfo=JSON.parse(localStorage.getItem("user"));
+  console.log({userInfo})
   useEffect(() => {
     const today = new Date().toLocaleDateString("vi-VN", {
       weekday: "long",
@@ -29,13 +31,22 @@ const NavHeader = ({toggleSidebar}) => {
           <div className="flex items-center">
            
             <div className="ml-4 flex items-center">
-              <img
+              <Link to="info">
+               <img
                 src="https://img.lovepik.com/free-png/20211204/lovepik-cartoon-avatar-png-image_401302777_wh1200.png"
                 alt="User"
                 className="w-10 h-10 rounded-full"
               />
-              <span className="ml-2">Trần Xuân Mạnh</span>
-              <i className="ml-2 fas fa-chevron-down"></i>
+              
+              </Link>
+             
+              <div className="ml-2">
+                <p>{userInfo.fullname}</p>
+                <p className='font-semibold'>{userInfo.role==1?"Admin":"Staff"}</p>
+
+              </div>
+              
+             
             </div>
           </div>
         

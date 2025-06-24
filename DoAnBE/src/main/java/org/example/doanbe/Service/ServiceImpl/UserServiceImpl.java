@@ -1,4 +1,4 @@
-package org.example.doanbe.TestService;
+package org.example.doanbe.Service.ServiceImpl;
 
 import org.example.doanbe.DTO.Request.ChangePasswordRequest;
 import org.example.doanbe.DTO.Request.UserRegister;
@@ -8,17 +8,17 @@ import org.example.doanbe.Exception.MyException;
 import org.example.doanbe.Repositories.RoleRepository;
 import org.example.doanbe.Repositories.UserRepository;
 import org.example.doanbe.Service.JwtService.JwtProvider;
+import org.example.doanbe.Service.ServiceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -141,5 +141,14 @@ public class UserServiceImpl implements UserService{
             user.setStatus(true);
         }
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        Users user=userRepository.findById(id).orElseThrow(()->new MyException("Không tìm thấy user"));
+        if(user==null){
+            throw new MyException("User đã bị xóa");
+        }
+        userRepository.deleteById(id);
     }
 }

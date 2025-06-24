@@ -51,9 +51,36 @@ const Addproduct= () => {
 
     const [loading,setLoading]=useState(false);
     const {getToken}=useAuth();
+    //Hàm validate dữ liệu
+ const validateProduct = () => {
+  const { name, price, quantity, description, tag, status, categoryId } = product;
+  
+  if (
+    !name.trim() ||
+    price === null ||
+    quantity === null ||
+    !description.trim() ||
+    !tag.trim() ||
+    status === null ||
+    !categoryId
+  ) {
+    toast.error("Vui lòng điền đầy đủ thông tin các trường dữ liệu", { autoClose: 1000 });
+    return false;
+  }
+
+  if (images.length === 0) {
+    toast.error("Vui lòng chọn ít nhất 1 hình ảnh", { autoClose: 1000 });
+    return false;
+  }
+
+  return true;
+};
+
 
     const handleAdd=async (e)=>{
       e.preventDefault();
+     if (!validateProduct()) return;
+
       setLoading(true); 
       const formData=new FormData();
       images.forEach((file) => {
@@ -70,7 +97,7 @@ const Addproduct= () => {
       
         console.log('Add product success',postProduct.data);
         if(postProduct.status===200){
-        toast.success('Thêm sản phẩm thành công');
+        toast.success('Thêm sản phẩm thành công',{autoClose:1000});
         setProduct({
           name:"",
           price:0,
@@ -95,9 +122,9 @@ const Addproduct= () => {
 const [danhmuc,setDanhMuc]=useState();
 //get danh muc
 const getDanhMuc=async()=>{
- const res= await axios.get("http://localhost:8080/api/v1/category");
+ const res= await axios.get("http://localhost:8080/api/v1/category/gets");
  const kq=res.data.data;
- setDanhMuc(kq);
+ setDanhMuc(kq.filter((item)=>item.status==true));
 //  console.log(res.data.data);
 }
 useEffect(()=>{
@@ -121,23 +148,20 @@ return (
   <div class="flex-1 p-2  mb-2.5 h-[70%] grid grid-cols-1 gap-y-1">
       <div>
           <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Tên sản phẩm</label>
-          <input value={product.name} onChange={(e)=>setProduct({...product,name:e.target.value})} type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2    " placeholder="Tên sản phẩm" required />
+          <input value={product.name} onChange={(e)=>setProduct({...product,name:e.target.value})} type="text"  id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2    " placeholder="Tên sản phẩm" required />
       </div>
        <div>
           <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Giá gốc</label>
-          <input value={product.price} onChange={(e)=>setProduct({...product,price:e.target.value})}  type="number" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2   " placeholder="Giá bán" required />
+          <input value={product.price} onChange={(e)=>setProduct({...product,price:e.target.value})}  type="number" min={0} id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[40%] p-2   " placeholder="Giá bán" required />
       </div>
        <div>
-          <label for="priceDiscount" class="block mb-2 text-sm font-medium text-gray-900 ">Giam</label>
+          <label for="priceDiscount" class="block mb-2 text-sm font-medium text-gray-900 ">Giảm giá</label>
           <input value={product.priceDiscount} onChange={(e)=>setProduct({...product,priceDiscount:e.target.value})}  type="number" min={0} id="priceDiscount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[40%] p-2   " placeholder="Giảm (%)" required />
       </div>
-      {/* <div>
-          <label for="priceSell" class="block mb-2 text-sm font-medium text-gray-900 ">Giá bán</label>
-          <input value={product.price} onChange={(e)=>setProduct({...product,price:e.target.value})}  type="text" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[80%] p-2   " placeholder="Giá bán" required />
-      </div> */}
+     
       <div>
           <label for="soluong" class="block mb-2 text-sm font-medium text-gray-900 ">Số lượng</label>
-          <input value={product.quantity}  onChange={(e)=>setProduct({...product,quantity:e.target.value})}  type="text" id="soluong" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[40%] p-2    " placeholder="Số lượng" required />
+          <input value={product.quantity}  onChange={(e)=>setProduct({...product,quantity:e.target.value})}  type="text" id="soluong" min={0} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[40%] p-2    " placeholder="Số lượng" required />
       </div>
       <div>
       <label for="danhmuc" class="block mb-2 text-sm font-medium text-gray-900 ">Danh mục</label>
@@ -154,11 +178,11 @@ return (
       </div>
       <div>
           <label for="mota" class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả sản phẩm</label>
-          <textarea value={product.description} onChange={(e)=>setProduct({...product,description:e.target.value})}  type="text" id="mota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-blue-500 block w-[50%] p-2   " placeholder="Mô tả sản phẩm" required />
+          <textarea value={product.description} onChange={(e)=>setProduct({...product,description:e.target.value})}  type="text" id="mota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-blue-500 block w-[80%] p-2   " placeholder="Mô tả sản phẩm" required />
       </div>  
        <div>
           <label for="tag" class="block mb-2 text-sm font-medium text-gray-900 ">Tag</label>
-          <input value={product.tag} onChange={(e)=>setProduct({...product,tag:e.target.value})} type="text" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[30%] p-2    " placeholder="Tag" required />
+          <input value={product.tag} onChange={(e)=>setProduct({...product,tag:e.target.value})} type="text" id="tag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded  focus:border-blue-500 block w-[40%] p-2    " placeholder="Tag" required />
       </div>
      
       <div>
@@ -202,24 +226,12 @@ return (
 
 
 
-  <div className='text-start w-[32%] p-1'>
-      {/* <buttton className=' p-2  rounded-lg bg-green-400' >Chọn hình ảnh </buttton>   */}
+  <div className='text-start w-[32%] p-1 '>
+     <label htmlFor="" className='font-semibold '>Chọn hình ảnh sản phẩm</label>
 
-      <label for="uploadFile1"
-    class=" flex bg-gray-500 mb-2  text-white text-base font-medium px-3 py-1 outline-none rounded w-max cursor-pointer ">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 mr-2 fill-white inline" viewBox="0 0 32 32">
-      <path
-        d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
-        data-original="#000000" />
-      <path
-        d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
-        data-original="#000000" />
-    </svg>
-
-    Upload Image
-    <input type="file" multiple id='uploadFile1' class="hidden" onChange={handleImageChange}/>
-  </label>
-  <div className="flex gap-x-3">
+    <input type="file" multiple id='uploadFile1' className='bg-black rounded text-white'  onChange={handleImageChange}/>
+ 
+  <div className="flex gap-x-3 mt-5">
       {imageUrl.map((image, index) => (
         <div key={index} className="relative">
           <img

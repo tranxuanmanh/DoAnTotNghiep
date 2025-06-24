@@ -6,6 +6,8 @@ import DateFormart from '../Base/DateFormart';
 
 const IndexTinTuc = () => {
     const [tintuc,setTinTuc]=useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // số item mỗi trang
     const getAllTinTuc=async()=>{
         try{
         const res=await axios.get("http://localhost:8080/api/v1/news/all");
@@ -21,6 +23,15 @@ const IndexTinTuc = () => {
         getAllTinTuc()
     },[])
     console.log(tintuc)
+
+    //Phân trang
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = tintuc.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(tintuc.length / itemsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     //Update status tin tuc
     const updateStatus=async(id)=>{
@@ -59,14 +70,14 @@ const IndexTinTuc = () => {
 
   return (
     <>
-     <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg bg-blue-200 p-2 mt-2 ml-2">
+     <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg p-2 mt-2 ml-2">
         <ToastContainer/>
         <div className='mb-3 mt-2'>
         <Link to="tintuc-add" className='bg-green-400 px-2 py-2 mb- rounded font-semibold'>Thêm mới tin tức</Link>
         </div>
  
-    <table class="w-[100%] text-sm text-left text-gray-500 rounded-lg">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <table class="w-[100%] text-sm text-left text-black rounded-lg">
+        <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 
                 <th scope="col" class="px-6 py-3">
@@ -100,7 +111,7 @@ const IndexTinTuc = () => {
         </thead>
         <tbody>
             {tintuc.length>0?(
-                tintuc.map((item,index)=>
+               currentItems.map((item,index)=>
                 {
                     
                  return (
@@ -159,31 +170,33 @@ const IndexTinTuc = () => {
             
         </tbody>
     </table>
-    <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-       
-        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-            </li>
-            <li>
-                <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-            </li>
-            <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-            </li>
-        </ul>
+    <nav class="flex items-center flex-column flex-wrap  pt-4" >
+       <button
+    onClick={() => paginate(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="px-3 py-1 border mx-1 rounded"
+  >
+    Prev
+  </button>
+
+  {[...Array(totalPages).keys()].map((num) => (
+    <button
+      key={num}
+      onClick={() => paginate(num + 1)}
+      className={`px-3 py-1 border mx-1 rounded ${currentPage === num + 1 ? 'bg-blue-500 text-white' : ''}`}
+    >
+      {num + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() => paginate(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="px-3 py-1 border mx-1 rounded"
+  >
+    Next
+  </button>
+      
     </nav>
 
 

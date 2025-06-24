@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import axios from "axios";
 
-
+//Thống kê doanh thu từng năm
 // Đăng ký các thành phần cần thiết
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 

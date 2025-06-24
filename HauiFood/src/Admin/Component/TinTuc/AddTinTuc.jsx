@@ -38,10 +38,10 @@ const AddTinTuc = () => {
 
   // Khi submit mới cập nhật state content và xử lý gửi dữ liệu
   const {getToken}=useAuth();
+  
   const handleSubmit = async(e) => {
     e.preventDefault();
-
-     const formData = new FormData();
+    const formData = new FormData();
     formData.append('news',JSON.stringify({...tintuc,content: contentRef.current})
   );
   if (file) {

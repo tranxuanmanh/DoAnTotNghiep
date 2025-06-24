@@ -1,4 +1,4 @@
-package org.example.doanbe.TestService;
+package org.example.doanbe.Service.ServiceInterface;
 
 import org.example.doanbe.DTO.Request.ChangePasswordRequest;
 import org.example.doanbe.DTO.Request.UserRegister;
@@ -21,4 +21,6 @@ public interface UserService {
     List<Users> findAllByRole(int roleId);
 
     void updateStatus(int id);
+
+    void deleteById(int id);
 }

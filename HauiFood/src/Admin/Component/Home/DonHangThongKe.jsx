@@ -5,6 +5,7 @@ import axios from "axios";
 import DatePickerComponent from "./DatePicker";
 
 // Đăng ký các thành phần bắt buộc
+//Thống kê đơn hàng hoàn tất,hủy
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const DonHangThongKe = () => {

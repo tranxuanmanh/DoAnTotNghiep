@@ -7,14 +7,13 @@ import org.example.doanbe.DTO.Request.JwtRequest;
 import org.example.doanbe.DTO.Request.JwtResponse;
 import org.example.doanbe.DTO.Request.UserRegister;
 import org.example.doanbe.DTO.Response.UserResponse;
-import org.example.doanbe.DTO.TacGiaBaiVietDTO;
 import org.example.doanbe.Entities.Users;
 import org.example.doanbe.Exception.MyException;
 import org.example.doanbe.Service.JwtService.JwtProvider;
 import org.example.doanbe.Service.MailService.MailService;
-import org.example.doanbe.TestService.MyUserDetail;
-import org.example.doanbe.TestService.MyUserDetailService;
-import org.example.doanbe.TestService.UserService;
+import org.example.doanbe.Service.ServiceImpl.MyUserDetail;
+import org.example.doanbe.Service.ServiceImpl.MyUserDetailService;
+import org.example.doanbe.Service.ServiceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -132,7 +131,7 @@ public class UserController {
             throw new MyException("Không có người dùng nào với roleid: "+roleId);
         }
         List<UserResponse> userResponseList = userLst.stream()
-                .map(user -> new UserResponse(user.getUserId(), user.getFullName(),user.getUsername(),user.getPhone(),user.getStatus(), user.getEmail(),user.getCreateAt()))
+                .map(user -> new UserResponse(user.getUserId(), user.getFullName(),user.getUsername(),user.getPhone(),user.getStatus(),user.getIsVerified(), user.getEmail(),user.getCreateAt()))
                 .toList();
         return ResponseEntity.ok(userResponseList);
     }
@@ -141,6 +140,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> updateStatus(@PathVariable int id){
         userService.updateStatus(id);
         return ResponseEntity.ok(new ApiResponse<>(200,"Cập nhật trạng thái thành công",""));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable int id){
+        userService.deleteById(id);
+        return ResponseEntity.ok(new ApiResponse<>(200,"Xóa người dùng thành công",""));
     }
 
 }

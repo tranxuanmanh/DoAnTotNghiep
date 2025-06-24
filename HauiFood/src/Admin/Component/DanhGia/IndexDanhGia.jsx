@@ -66,9 +66,9 @@ const IndexDanhGia = () => {
       <div class=" w-[99.3%] relative  shadow-md sm:rounded-lg bg-blue-200 p-2 mt-2 ml-2">
         <ToastContainer/>
  <div className='flex gap-x-4 mb-2'>
-    <button
+    {/* <button
     
-    className='border-red-500 border focus:bg-teal-400 px-2 py-1 rounded'>Tất cả</button>
+    className='border-red-500 border focus:bg-teal-400 px-2 py-1 rounded'>Tất cả</button> */}
     <button
     onClick={()=>setStart(1)}
     className='border-red-500 border px-2 rounded focus:bg-green-400 font-semibold'>1 <i class="fa-solid fa-star text-yellow-500"></i></button>

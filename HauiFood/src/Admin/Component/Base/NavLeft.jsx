@@ -21,34 +21,37 @@ const NavLeft = ({isSidebarOpen}) => {
       const [orders, setOrders] = useState([]);
 
       const {getToken}=useAuth();
-      const getOrders = async () => {
-        try {
-          let api = "http://localhost:8080/api/v1/order/all/CHOXULY";
-          const res = await axios.get(api,{
-            headers:{
-              Authorization:`Bearer ${getToken()}`
-            }
-          });
-          setOrders(res.data);
-        } catch (error) {
-          toast.error("Có lỗi xảy ra: " + error);
-        }
-      };
+      // const getOrders = async () => {
+      //   try {
+      //     let api = "http://localhost:8080/api/v1/order/all/CHOXULY";
+      //     const res = await axios.get(api,{
+      //       headers:{
+      //         Authorization:`Bearer ${getToken()}`
+      //       }
+      //     });
+      //     setOrders(res.data);
+      //   } catch (error) {
+      //     toast.error("Có lỗi xảy ra: " + error);
+      //   }
+      // };
     
-      useEffect(() => {
-        getOrders();
-      }, []);
+      // useEffect(() => {
+      //   getOrders();
+      // }, []);
+       const user = JSON.parse(localStorage.getItem("user"));
+       const isAdmin=Number(user.role) === 1?true:false;
+     
       
   return (
    
-      <div className={`fixed overflow-y-scroll h-[100%] bg-teal-300 shadow-md transition-transform duration-300 ${isSidebarOpen ? 'w-64' : 'w-0'}`}>
+      <div className={`fixed overflow-y-scroll h-[100%] bg-green-300 shadow-md transition-transform duration-300 ${isSidebarOpen ? 'w-64' : 'w-0'}`}>
        <ToastContainer/>
         <div className={`p-4 ${isSidebarOpen ? 'block' : 'hidden'}`}>
          
           <Link to="home">
-          <img className='w-26 h-26 rounded-full mx-auto' src="https://play-lh.googleusercontent.com/eolrJkDuZ2_msCv3a0oh3nqf107oNFXudzUlsN9L8T79C7UwWigYNaArKZgiQpiuqOs" alt="" />
-          <h1 className="text-xl text-center mt-2 font-bold text-cyan-700 uppercase">
-          Admin Haui Food
+          <img className='w-26 h-26 rounded-full mx-auto' src="../public/iconDoAn.png" alt="" />
+          <h1 className="text-xl text-center mt-1 font-bold text-red-500 uppercase">
+           Haui Food
           </h1>
           </Link>
          
@@ -67,14 +70,14 @@ const NavLeft = ({isSidebarOpen}) => {
             {/* Quản lý đơn hàng */}
             <li onClick={() => setOpenOrder(!openOrder)} className=" cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-100 focus:bg-blue-100  hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-chess-queen"></i>
+                <i class="fa-solid fa-dumpster-fire"></i>
               </span>
               <Link to="order-manager">Quản lý đơn hàng</Link>
-              <span className='ml-9'>
+              {/* <span className='ml-9'>
             {openOrder?<i class="fa-solid fa-chevron-down"></i>:<i class="fa-solid fa-chevron-up"></i>}  
-              </span>
+              </span> */}
             </li>
-            {openOrder && (
+            {/* {openOrder && (
                 <ul className="ml-5 mt-[-10px] rounded w-[85%]">
                   <li className="relative   px-4 py-2 text-gray-700 hover:bg-green-200 border-b-1 hover:text-green-600 border-gray-200 hover:rounded">
                     <Link to="./order-manager/new-order"> 
@@ -84,29 +87,29 @@ const NavLeft = ({isSidebarOpen}) => {
                   </li>
                  
                 </ul>
-              )}
+              )} */}
               {/* Quản lý sản phẩm */}
             <li onClick={()=>setOpenProduct(!openProduct)} className=" cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
                 <i className="fa-regular fa-money-bill-1"></i>
               </span>
               <Link to="product-manager">Quản lý sản phẩm</Link>
-              <span className='ml-8'>
+              {/* <span className='ml-8'>
             {openProduct?<i class="fa-solid fa-chevron-down"></i>:<i class="fa-solid fa-chevron-up"></i>}  
-              </span>
+              </span> */}
             </li>
-            {openProduct && (
+            {/* {openProduct && (
                 <ul className="ml-5 mt-[-10px] rounded w-[85%]">
                   <li className="px-4 py-2 text-gray-700 hover:bg-green-200 border-b-1 hover:text-green-600 border-gray-200 hover:rounded">
                     <Link to="product-manager/add-product"> 🍿Thống kê sản phẩm</Link>
                   </li>
                  
                 </ul>
-              )}
+              )} */}
               {/* Quản lý danh mục */}
             <li onClick={()=>setOpenCategory(!openCategory)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-note-sticky"></i>
+               <i class="fa-solid fa-list"></i>
               </span>
               <Link to="category-manager">Quản lý danh mục</Link>
               
@@ -115,7 +118,7 @@ const NavLeft = ({isSidebarOpen}) => {
            {/* Quản lý khuyến mãi */}
             <li onClick={()=>setOpenSale(!openSale)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-sun"></i>
+                <i class="fa-solid fa-money-check-dollar"></i>
               </span>
               <Link to="sale-manager">Quản lý khuyến mãi</Link>
              
@@ -125,7 +128,7 @@ const NavLeft = ({isSidebarOpen}) => {
           {/* Quan ly topping */}
            <li onClick={()=>setOpenTopping(!openTopping)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-user"></i>
+                <i class="fa-solid fa-notes-medical"></i>
               </span>
               <Link to="topping-manager">Quản lý topping</Link>
               
@@ -135,7 +138,7 @@ const NavLeft = ({isSidebarOpen}) => {
               {/* Quan ly tin tuc */}
             <li onClick={()=>setOpenTinTuc(!openTinTuc)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-user"></i>
+              <i class="fa-solid fa-calendar"></i>
               </span>
               <Link to="tintuc-manager">Quản lý tin tức</Link>
              
@@ -143,50 +146,47 @@ const NavLeft = ({isSidebarOpen}) => {
 
 
             {/* Quản lý khách hàng */}
-            <li onClick={()=>setOpenUser(!openUser)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
+            {isAdmin&&
+             <li onClick={()=>setOpenUser(!openUser)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-user"></i>
+           <i class="fa-solid fa-users"></i>
               </span>
               <Link to="user-manager">Quản lý khách hàng</Link>
             
             </li>
-               <li onClick={()=>setOpenNhanVien(!openNhanVien)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
+            }
+           
+            {
+            isAdmin&&
+            <li onClick={()=>setOpenNhanVien(!openNhanVien)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-user"></i>
+               <i class="fa-regular fa-circle-user"></i>
               </span>
               <Link to="nhanvien-manager">Quản lý nhân viên</Link>
-            </li>
+               </li>
+            }
+               
 
-              
-            <li onClick={()=>setOpenReview(!openReview)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
+              {isAdmin&&
+              <li onClick={()=>setOpenReview(!openReview)} className="px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-user"></i>
+                <i class="fa-regular fa-star"></i>
               </span>
               <Link to="review-manager">Quản lý đánh giá</Link>
-            </li>
+              </li>
+            }
+            
 
       <li onClick={() => setThongke(!thongke)} className=" cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-100 focus:bg-blue-100  hover:text-blue-600 hover:shadow hover:shadow-blue-300   hover:rounded-lg  border-gray-300">
               <span className='mr-2'>
-                <i className="fa-regular fa-chess-queen"></i>
+               <i class="fa-solid fa-arrow-right-from-bracket"></i>
               </span>
-              <Link to="order-manager">Khác</Link>
-              <span className='ml-9'>
+              <Link to="/logout">Đăng xuất</Link>
+              {/* <span className='ml-9'>
             {thongke?<i class="fa-solid fa-chevron-down"></i>:<i class="fa-solid fa-chevron-up"></i>}  
-              </span>
+              </span> */}
             </li>
-            {thongke && (
-                <ul className="ml-5 mt-[-10px] rounded w-[85%]">
-                  <li className="px-4 py-2 text-gray-700 hover:bg-green-200 border-b-1 hover:text-green-600 border-gray-200 hover:rounded">
-                    <Link href="#"> 🍿 Thống kê doanh thu</Link>
-                  </li>
-                  <li className="px-4 py-2 text-gray-700 hover:bg-green-200 border-b-1 hover:text-green-600 border-gray-200 hover:rounded">
-                    <a href="#">🧀 Thống kê sản phẩm</a>
-                  </li>
-                  <li className="px-4 py-2 text-gray-700 hover:bg-green-200 border-b-1 hover:text-green-600 border-gray-200 hover:rounded">
-                    <a href="#"> 🍠 Thống kê người dùng</a>
-                  </li>
-                </ul>
-              )}
+           
           </ul>
         </nav>
         

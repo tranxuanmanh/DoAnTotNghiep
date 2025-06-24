@@ -1,9 +1,8 @@
-package org.example.doanbe.TestService;
+package org.example.doanbe.Service.ServiceImpl;
 
-import org.example.doanbe.DTO.UserDTO;
 import org.example.doanbe.Entities.Users;
 import org.example.doanbe.Exception.MyException;
-import org.example.doanbe.Repositories.UserRepository;
+import org.example.doanbe.Service.ServiceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

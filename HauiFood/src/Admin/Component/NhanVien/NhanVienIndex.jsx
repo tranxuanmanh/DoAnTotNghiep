@@ -54,6 +54,25 @@ const NhanVienIndex = () => {
         }
     }
 
+    //Delete nhan vien
+        const deleteNhanVien=async(id)=>{
+        const confirm=window.confirm("Bạn chắc chắn muốn xóa nhân viên này");
+        if(!confirm){
+            return;
+        }
+        try{
+        const res=await axios.delete(`http://localhost:8080/api/v1/user/delete/${id}`,{
+            headers:{
+                Authorization:`Bearer ${getToken()}`
+            }
+        });
+        console.log(res);
+        toast.success("Xóa nhân viên thành công",{autoClose:1000})
+        getAllNhanVien()
+        }catch(error){
+            toast.error("Có lỗi khi xóa"+error,{autoClose:1000})
+        }
+    }
 
   return (
     <>
@@ -126,7 +145,7 @@ const NhanVienIndex = () => {
                 onClick={()=>updateStatus(item.userId)} class="text-2xl w-full  fa-solid fa-toggle-off text-red-500"></i>}
                 </td>
                 <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Xóa tài khoản</a>
+                    <p onClick={()=>deleteNhanVien(item.userId)} class="cursor-pointer  font-medium text-blue-600 dark:text-blue-500 hover:underline">Xóa tài khoản</p>
                 </td>
             </tr>
                 ))

@@ -1,23 +1,12 @@
-package org.example.doanbe.TestService;
-import org.example.doanbe.DTO.MonthOrderStatusDTO;
-import org.example.doanbe.DTO.RevenueByMonthDTO;
-import org.example.doanbe.DTO.RevenueByYearDTO;
+package org.example.doanbe.Service.ServiceImpl;
+import org.example.doanbe.DTO.*;
 import org.example.doanbe.Entities.*;
 import org.example.doanbe.Entities.Enum.ORDERSTATUS;
 import org.example.doanbe.Entities.Enum.PAYMETHOD;
 import org.example.doanbe.Entities.Enum.SHIPPINGMETHOD;
 import org.example.doanbe.Exception.MyException;
-import org.example.doanbe.Repositories.ProductRepository;
-import org.example.doanbe.Repositories.ToppingRepository;
-import org.example.doanbe.Repositories.UserRepository;
-import org.example.doanbe.Repositories.VoucherRepository;
-import org.example.doanbe.TestDTO.OrderDTO;
-import org.example.doanbe.TestDTO.OrderItemDTO;
-import org.example.doanbe.TestDTO.OrderItemToppingDTO;
-import org.example.doanbe.TestRepository.OrderItemsRepository;
-import org.example.doanbe.TestRepository.OrderRepository;
-
-
+import org.example.doanbe.Repositories.*;
+import org.example.doanbe.Service.MailService.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +31,12 @@ public class OrderService {
     @Autowired
     private ToppingRepository toppingRepository;
 
+    @Autowired
+    private MailService mailService;
+
     @Transactional
     public Orders createOrder(OrderDTO orderDTO) {
+
         double totalPriceOrder = 0;
         Orders order = new Orders();
         order.setOrderCode(orderDTO.getOrderCode());
@@ -54,6 +47,10 @@ public class OrderService {
         //Lay user theo id
         Users user = userRepository.findById(orderDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        //Gui email khi dat hang
+        String emailContent = "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Mã đơn hàng của bạn là: " + orderDTO.getOrderCode();
+        mailService.sendSimpleMail(user.getEmail(), "Cảm ơn bạn đã đặt hàng", emailContent);
         //setUser trong order
         order.setUser(user);
         //Lay ten nguoi nhan hang
@@ -146,8 +143,6 @@ public class OrderService {
 
         }
 
-
-
         if (voucher.isPresent()) {
             if (totalAmount >= voucher.get().getMinOrder()) {
                 totalAmount -= voucher.get().getDiscount();
@@ -158,7 +153,13 @@ public class OrderService {
         }
         order.setOrderItems(orderItemsList);
         order.setTotalAmount(totalAmount);
+
+        //Update lại số lượng san pham khi thêm sản phẩm vào đơn hàng
+        updateQuantityAndSoldQuantity(order);
+
+        //Luu don hang
         orderRepository.save(order);
+
         return order;
     }
 
@@ -169,6 +170,11 @@ public class OrderService {
             Orders orders1 = orders.get();
             orders1.setUpdateAt(LocalDateTime.now());
             switch (status) {
+                //case "CHOXULY":
+                   // orders1.setOrderStatus(ORDERSTATUS.CHOXULY);
+                    //Khi moi dat hang thi tru luon so luong san pham
+//                    updateQuantityAndSoldQuantity(orders1);
+                   //break;
                 case "CHAPTHUAN":
                     for (Order_Item item : orders1.getOrderItems()) {
                         Product product = productRepository.findById(item.getProduct().getProduct_id()).orElseThrow(() -> new MyException("Not found"));
@@ -178,7 +184,7 @@ public class OrderService {
                         }
                     }
                     orders1.setOrderStatus(ORDERSTATUS.CHAPTHUAN);
-                    updateQuantityAndSoldQuantity(orders1);
+//                    updateQuantityAndSoldQuantity(orders1);
                     break;
 
                 case "GIAOHANG":
@@ -206,7 +212,7 @@ public class OrderService {
             }
            return orderRepository.save(orders1);
         }else{
-            throw new MyException("Khong ton tai san pham nay");
+            throw new MyException("Khong ton tai don hang nay");
         }
     }
 
@@ -238,10 +244,7 @@ public class OrderService {
             }
         }
 
-
-
-
-        //get revenue theo thang trong nam
+        //get doanh thu theo thang trong nam
         public List<RevenueByMonthDTO> getRevenueByMonth(String year) {
             List<Object[]> results = orderRepository.revenueByMonthInYear(year);
 

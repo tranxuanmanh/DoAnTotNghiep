@@ -3,6 +3,8 @@ import AddressSelector from "./Address";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import useAuth from "../../Login_Logout/CustomHook";
+import Loading from "../../Admin/Component/Base/Loading";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const Checkout = () => {
@@ -76,29 +78,39 @@ const Checkout = () => {
     }
   };
 
-  let PhiShip=0;
-  //Cộng thêm tiền ship
-  if(order.shippingMethod=="GIAOVAOLUC"){
-    PhiShip+=10000;
-  }else if(order.shippingMethod=="GIAONGAY"){
-    PhiShip+=15000;
-  }else if(order.shippingMethod=="TUDENLAY"){
-    PhiShip=0;
-  }
-  
+
+// let phiShip=0;
+//  if (order.shippingMethod === "GIAOVAOLUC") {
+//     phiShip+=10000;
+//   } else if (order.shippingMethod === "GIAONGAY") {
+//     phiShip+=15000;
+//    } else if (order.shippingMethod === "DENLAY" || order.shippingMethod === "TUDENLAY") {
+//      phiShip=0;
+//   }
+
+const shippingFees = {
+  GIAONGAY: 15000,
+  GIAOVAOLUC: 10000,
+  TUDENLAY: 0,
+  DENLAY: 0,
+};
+
+const phiShip = shippingFees[order.shippingMethod] || 0;
 
 
 
 
 
   const {getToken}=useAuth();
+  const [loading,setLoading]=useState(false);
  
-  //Thêm vào backend để đặt
+  //Với hình thức thanh toán là tiền mặt
   const addOrder=async()=>{
     const xacnhan=window.confirm("Xác nhận đặt đơn hàng này");
     if(!xacnhan){
       return;
     }
+    setLoading(true);
     try{
     const res=await axios.post("http://localhost:8080/api/v1/order/add",order,{
       headers: {
@@ -118,6 +130,7 @@ const Checkout = () => {
    
    
     }catch(error){
+      setLoading(false);
       if (error.response) {
         console.error("Lỗi từ server:", error.response.data);
       } else if (error.request) {
@@ -136,7 +149,8 @@ if (isCheckingLogin) {
 }
 
 //tổng tiền tính cả phí ship
-const tongtien=totalAfterDiscount+PhiShip;
+const tongtien=totalAfterDiscount+phiShip;
+//Gọi đến api mã qr chuyển khoản
 const getLink = async () => {
   //tong tien sau khi giảm giá
   // const amount=Number(totalAfterDiscount);
@@ -146,6 +160,7 @@ const getLink = async () => {
     if(!xacnhan){
       return;
     }
+    setLoading(true);
   try {
 
     const response = await axios.post(`http://localhost:8080/api/v1/payment/create?orderCode=${orderCode1}&amount=${tongtien}`);
@@ -162,21 +177,40 @@ const getLink = async () => {
     
 
   } catch (error) {
+    setLoading(false);
     console.error("Lỗi khi tạo link thanh toán:", error);
     alert("Lỗi khi tạo link thanh toán");
   }
 };
+
+//Phương thức thực hiện thanh toán
 const handleSubmit=(e)=>{
   e.preventDefault();
+   const { fullName, phoneNumber, address, shippingMethod, payMethod } = order;
+
+  // Kiểm tra rỗng
+  if (!fullName || !phoneNumber || !address) {
+    toast.warning("Vui lòng nhập đầy đủ thông tin đơn hàng!",{autoClose:1000});
+    return;
+  }else if(!shippingMethod){
+     toast.warning("Vui lòng chọn hình thức giao hàng",{autoClose:1000});
+     return;
+  }else if(!payMethod){
+    toast.warning("Vui lòng chọn hình thức thanh toán",{autoClose:1000});
+      return;
+    
+  }
   if(totalAfterDiscount>0){
   if(order.payMethod=="TIENMAT"){
     console.log("Thanh toan bang tien mat");
+    //Thanh toán = tiền mặt thì gọi hàm này
     addOrder();
     console.log(order);
   }
   else if(order.payMethod=="CHUYENKHOAN"){
     console.log("Chuyển khoản");
     localStorage.setItem("order",JSON.stringify(order));
+    //Thanh toán = chuyển khoản thì gọi hàm reder ra link
     getLink();
   //  navigate("/status-payment")
   }
@@ -190,6 +224,12 @@ const handleSubmit=(e)=>{
    
     
     <div className="w-[99vw] h-full-xl p-2 mt-2">
+      <ToastContainer/>
+      {loading&&(
+     <div className="fixed inset-0 bg-white/60 z-100 flex justify-center items-center">
+     <Loading />
+   </div>
+   )}
       <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
         Thanh toán đơn hàng
       </h2>
@@ -211,6 +251,7 @@ const handleSubmit=(e)=>{
                     type="text"
                     placeholder=" Ví dụ: Nguyễn Văn A"
                     className="border w-[95%] rounded"
+                    required
                   />
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
@@ -221,6 +262,7 @@ const handleSubmit=(e)=>{
                     type="text"
                     placeholder=" Ví dụ: 0972685517"
                     className="border w-[95%] rounded"
+                    required
                   />
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
@@ -232,6 +274,7 @@ const handleSubmit=(e)=>{
                     type="text"
                     placeholder=" Nhập tên đường, ngõ, số nhà"
                     className="border w-[95%] rounded"
+                    required
                   />
                 </div>
 
@@ -243,6 +286,7 @@ const handleSubmit=(e)=>{
                     type="text"
                     placeholder=" Ví dụ: Vận chuyển lúc 6h chiều"
                     className="border w-[95%] rounded"
+
                   />
                 </div>
 
@@ -259,7 +303,7 @@ const handleSubmit=(e)=>{
                           type="radio"
                           name="shippingMethod"
                           value="GIAONGAY"
-                          
+                         
                           onChange={handleChange}
                         />
                       </div>
@@ -270,7 +314,7 @@ const handleSubmit=(e)=>{
                           type="radio"
                           name="shippingMethod"
                           value="GIAOVAOLUC"
-                      
+                        
                           onChange={handleChange}
                         />
                         {deliveryOption=="GIAOVAOLUC" && (
@@ -286,7 +330,7 @@ const handleSubmit=(e)=>{
                           type="radio"
                           name="shippingMethod"
                           value="DENLAY"
-                          
+                        
                           onChange={handleChange}
                         />
                       </div>
@@ -393,7 +437,10 @@ const handleSubmit=(e)=>{
               </li>
               <li className="flex justify-between px-2">
                 <p>Phí vận chuyển</p>
-                <p>{PhiShip.toLocaleString()} đ</p>
+               <p>{phiShip.toLocaleString()} đ</p>
+                {/* {order.shippingMethod=="GIAONGAY"?"12.000 đ":""}
+                {order.shippingMethod=="GIAOVAOLUC"?"10.000 đ":""} */}
+                {/* <p>{phiShip.toLocaleString()>0} đ</p> */}
               </li>
             </ul>
             <hr />
